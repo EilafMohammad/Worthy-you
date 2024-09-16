@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../helpers/meditation_button.dart';
-import '../helpers/meditation_card.dart';
-import 'my_affirmations_screen.dart';
-import 'subscription_screen.dart';
+import '../../helpers/meditation_button.dart';
+import '../../helpers/meditation_card.dart';
+import '../my_affirmations_screen.dart';
+import '../subscription_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  static const routeName = 'HomeScreen';
+  static const tag = '/home_screen';
 
   const HomeScreen({super.key});
 
