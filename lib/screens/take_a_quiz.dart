@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class QuizScreen extends StatefulWidget {
-  static const routeName = 'QuizScreen';
+  static const tag = '/quiz_screen';
   const QuizScreen({super.key});
 
   @override

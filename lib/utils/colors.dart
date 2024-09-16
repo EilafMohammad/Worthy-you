@@ -11,4 +11,7 @@ class MyColors{
   static const btnColorPrimary =   Color(0xFF021433);
   static const inActiveBorderColor = Color(0xFFD9D9D9);
   static const activeBorderColor = Color(0xFFFFFFFF);
+
+
+  static const textColorSecondary = Color(0xFF667085);
 }

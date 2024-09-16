@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:worthy_you/screens/home/main_screen.dart';
+import 'package:worthy_you/utils/colors.dart';
+import 'package:worthy_you/utils/constants.dart';
+import 'package:worthy_you/utils/styles.dart';
+
 import '../../helpers/meditation_button.dart';
 import '../../helpers/meditation_card.dart';
 import '../my_affirmations_screen.dart';
@@ -18,18 +23,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _screens = [
     const MyAffirmationsScreen(),
-    const DesignScreen(), // Main Screen
+    const MainScreen(), // Main Screen
     const SubscriptionScreen(),
   ];
 
   void _onItemTapped(int index) {
     if (index == 1) {
-      // Only change the index if Main is tapped
       setState(() {
         _selectedIndex = index;
       });
     } else {
-      // Directly navigate to the other screens without bottom navigation
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => _screens[index]),
       );
@@ -38,61 +41,61 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0XFFFFFFFF),
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: _selectedIndex == 1
-          ? Container(
-        decoration: BoxDecoration(
-          color: Colors.white, // Background color for the bottom navigation bar
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.black54,
-              blurRadius: 5.0,
-              offset: Offset(0.0, 0.75),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-          child: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(
-                icon: ImageIcon(
-                  size: 28,
-                  AssetImage('images/icons/investment 1.png'),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: MyColors.backgroundColor,
+        body: _screens[_selectedIndex],
+        bottomNavigationBar: _selectedIndex == 1
+            ? Container(
+                decoration: const BoxDecoration(
+                  color: MyColors.backgroundColor,
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: MyColors.colorBlack,
+                      blurRadius: 2.0,
+                      offset: Offset(0.0, 0.75),
+                    ),
+                  ],
                 ),
-                label: 'My Affirmations',
-              ),
-              BottomNavigationBarItem(
-                icon: ImageIcon(
-                  size: 22,
-                  AssetImage('images/icons/home 1.png'),
+                child: BottomNavigationBar(
+                  items: const [
+                    BottomNavigationBarItem(
+                      icon: ImageIcon(
+                        size: 25,
+                        AssetImage('images/icons/investment 1.png'),
+                      ),
+                      label: Constants.labelMyAffirmations,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: ImageIcon(
+                        size: 22,
+                        AssetImage('images/icons/home 1.png'),
+                      ),
+                      label: Constants.labelMain,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: ImageIcon(
+                        size: 25,
+                        AssetImage('images/icons/Money.png'),
+                      ),
+                      label: Constants.labelSubscriptions,
+                    ),
+                  ],
+                  currentIndex: _selectedIndex,
+                  selectedItemColor: Colors.black,
+                  unselectedLabelStyle: Styles.textStyle.copyWith(
+                      fontSize: 12.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                  selectedLabelStyle: Styles.textStyle.copyWith(
+                      fontSize: 12.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                  onTap: _onItemTapped,
                 ),
-                label: 'Main',
-              ),
-              BottomNavigationBarItem(
-                icon: ImageIcon(
-                  size: 28,
-                  AssetImage('images/icons/Money.png'),
-                ),
-                label: 'Subscriptions',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.black,
-            onTap: _onItemTapped,
-          ),
-        ),
-      )
-          : null, // Hide bottom bar on other screens
+              )
+            : null, // Hide bottom bar on other screens
+      ),
     );
   }
 

@@ -12,4 +12,18 @@ class Constants{
   static const String labelSkip="Skip";
   static const String labelNext="Next";
   static const String labelGetStarted="Get Started";
+
+  static const String labelMyAffirmations="My Affirmations";
+  static const String labelMain="Main";
+  static const String labelSubscriptions="Subscriptions";
+  static const String labelWelcomEliaf="Welcome, Eliaf!";
+  static const String titleCraftingPersonalizedAffirmations="Crafting your Personalized affirmations";
+  static const String titleMeditationPaths="Meditation paths for you";
+
+  static const String labelBookSession="Book a session";
+  static const String labelEcho="Echo (venting bot)";
+
+
+  static const String labelVentingBot="Venting Bot";
+  static const String chatBotIntroInfo="Hello Nice to see you here! By pressing the 'Start chat' button you agree to have your personal data processed as described in our Privacy Policy";
 }
