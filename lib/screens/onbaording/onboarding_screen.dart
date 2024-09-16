@@ -1,12 +1,20 @@
 // File: screens/onboarding_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:worthy_you/screens/first_onboard.dart';
-import 'package:worthy_you/screens/second_onboard.dart';
-import 'package:worthy_you/screens/third_onboard.dart';
+import 'package:get/get.dart';
+import 'package:worthy_you/screens/home/home_screen.dart';
+import 'package:worthy_you/screens/onbaording/first_onboard.dart';
+import 'package:worthy_you/screens/onbaording/second_onboard.dart';
+import 'package:worthy_you/screens/onbaording/third_onboard.dart';
+import 'package:worthy_you/screens/widget/btn_primary.dart';
+import 'package:worthy_you/utils/colors.dart';
+import 'package:worthy_you/utils/constants.dart';
+import 'package:worthy_you/utils/styles.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
+
+  static String tag = "/onboarding_screen";
 
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();
@@ -53,9 +61,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MyColors.backgroundColor,
       body: Column(
         children: [
+          if (_currentPage > 0)
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(top: 20.0),
+              child: IconButton(
+                onPressed: () {
+                  _prevPage();
+                },
+                icon: const Icon(Icons.arrow_back),
+              ),
+            ),
           Expanded(
             child: PageView(
               controller: _pageController,
@@ -85,45 +104,44 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: _prevPage,
-                  child: const Text(
-                    'Back',
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ),
-                if (_currentPage < 2)
-                  ElevatedButton(
-                    onPressed: _nextPage,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 14.0, horizontal: 28.0),
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+            padding: EdgeInsets.symmetric(
+                horizontal: (_currentPage < 2) ? 20.0 : 50.0),
+            child: (_currentPage < 2)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Get.toNamed(HomeScreen.tag);
+                        },
+                        child: const Text(
+                          Constants.labelSkip,
+                          style: Styles.buttonTextStyle,
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      'Next',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          if (_currentPage < 2) {
+                            _nextPage();
+                          } else {
+                            Get.toNamed(HomeScreen.tag);
+                          }
+                        },
+                        child: const Text(
+                          Constants.labelNext,
+                          style: Styles.buttonTextStyle,
+                        ),
+                      ),
+                    ],
                   )
-                else
-                  TextButton(
+                : PrimaryButton(
+                    title: Constants.labelGetStarted,
+                    backgroundColor: MyColors.btnColorPrimary,
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('HomeScreen');
+                      Get.toNamed(HomeScreen.tag);
                     },
-                    child: const Text(
-                      'Enter as a guest',
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
                   ),
-              ],
-            ),
           ),
           const SizedBox(height: 20), // Bottom padding
         ],

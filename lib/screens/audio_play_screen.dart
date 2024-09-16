@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AudioPlayScreen extends StatelessWidget {
-  static const routeName = 'AudioPlayScreen';
+  static const tag = 'audio_player_screen';
 
   const AudioPlayScreen({super.key});
   @override

@@ -1,9 +1,14 @@
-// File: screens/splash_screen.dart
 
 import 'package:flutter/material.dart';
-import 'dart:async'; // Required for Timer
+import 'dart:async';
+
+import 'package:get/get.dart';
+import 'package:worthy_you/screens/onbaording/onboarding_screen.dart';
+import 'package:worthy_you/utils/colors.dart'; // Required for Timer
 
 class SplashScreen extends StatefulWidget {
+  static String tag = "/splash_screen";
+
   const SplashScreen({super.key});
 
   @override
@@ -14,25 +19,18 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Timer to navigate to OnboardingScreen after 3 seconds
     Timer(const Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacementNamed('OnboardingScreen'); // Navigate to OnboardingScreen
+      Get.toNamed(OnboardingScreen.tag);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MyColors.backgroundColor,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('images/splash_worthy.png', height: 320, width: 320),
-            const SizedBox(height: 20),
-            const CircularProgressIndicator(), // Loading progress bar
-          ],
-        ),
+        child: Image.asset('images/splash_worthy.png',width : width*0.6),
       ),
     );
   }

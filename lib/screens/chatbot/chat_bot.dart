@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 
-class Bot2ChatScreen extends StatefulWidget {
-  static const routeName = 'Bot2ChatScreen';
+class ChatBotScreen extends StatefulWidget {
+  static const tag = '/chat_screen';
 
-  const Bot2ChatScreen({super.key});
+  const ChatBotScreen({super.key});
 
   @override
-  _Bot2ChatScreenState createState() => _Bot2ChatScreenState();
+  _ChatBotScreenState createState() => _ChatBotScreenState();
 }
 
-class _Bot2ChatScreenState extends State<Bot2ChatScreen> {
+class _ChatBotScreenState extends State<ChatBotScreen> {
   final List<Map<String, String>> _conversationHistory = []; // Maintain conversation history
   final List<ChatBubble> _messages = [];
   final TextEditingController _controller = TextEditingController();
