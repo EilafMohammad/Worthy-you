@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       body: Center(
-        child: Image.asset('images/splash_worthy.png',width : width*0.6),
+        child: Image.asset('images/icon_worthy.png',width : width*0.6),
       ),
     );
   }

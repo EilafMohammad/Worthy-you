@@ -14,4 +14,5 @@ class MyColors{
 
 
   static const textColorSecondary = Color(0xFF667085);
+  static const selfChatBubbleBackground = Color(0xFF003DF5);
 }

@@ -45,7 +45,7 @@ class _ChatBotIntroScreenState extends State<ChatBotIntroScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0XFFFAFDFF),
+        backgroundColor: MyColors.backgroundColor,
         body: Column(
           children: [
             Row(

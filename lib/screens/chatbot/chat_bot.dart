@@ -1,6 +1,9 @@
+import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:worthy_you/utils/colors.dart';
+import 'package:worthy_you/utils/constants.dart';
+import 'package:worthy_you/utils/styles.dart';
 
 class ChatBotScreen extends StatefulWidget {
   static const tag = '/chat_screen';
@@ -164,49 +167,45 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Venting Bot"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              setState(() {
-                _messages.clear();
-                _conversationHistory.clear();
-              });
-              _deleteMessages(); // Delete from SharedPreferences
-              _scrollToBottom();
-            },
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: MyColors.backgroundColor,
+        appBar: AppBar(
+          title: const Text(
+            Constants.labelVentingBot,
+            style: Styles.subHeadingStyle,
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController, // Attach the scroll controller
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                return _messages[index];
+          centerTitle: true,
+          backgroundColor: MyColors.backgroundColor,
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController, // Attach the scroll controller
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  return _messages[index];
+                },
+              ),
+            ),
+            if (_isLoading)
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: DotsLoadingIndicator(),
+              ),
+            const Divider(height: 1.0,),
+            MessageInput(
+              controller: _controller,
+              onSend: (value) {
+                if (value.isNotEmpty) {
+                  _sendMessage(value);
+                  _controller.clear();
+                }
               },
             ),
-          ),
-          if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: DotsLoadingIndicator(),
-            ),
-          MessageInput(
-            controller: _controller,
-            onSend: (value) {
-              if (value.isNotEmpty) {
-                _sendMessage(value);
-                _controller.clear();
-              }
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -226,27 +225,59 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        decoration: BoxDecoration(
-          color: isMe ? Colors.blue : Colors.grey[200],
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12),
-            topRight: Radius.circular(12),
-            bottomLeft: isMe ? Radius.circular(12) : Radius.circular(0),
-            bottomRight: isMe ? Radius.circular(0) : Radius.circular(12),
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment:
+            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (!isMe)
+            Container(
+              margin: const EdgeInsets.only(left: 10),
+              child: const CircleAvatar(
+                radius: 15.0,
+                backgroundImage: AssetImage('images/icon_bot.jpg'),
+              ),
+            ),
+          Expanded(
+            child: Align(
+              alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                // margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                margin: EdgeInsets.only(
+                  top: 5,
+                  bottom: 5,
+                  right: isMe ? 10.0 : 50.0,
+                  left: isMe ? 50.0 : 10.0,
+                ),
+                decoration: BoxDecoration(
+                    color: isMe
+                        ? MyColors.selfChatBubbleBackground
+                        : MyColors.colorWhite,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5),
+                      bottomLeft: Radius.circular(5),
+                      bottomRight: Radius.circular(5),
+                    ),
+                    border: Border.all(
+                      color: isMe
+                          ? MyColors.selfChatBubbleBackground
+                          : MyColors.inActiveBorderColor,
+                    )),
+                child: Text(
+                  message,
+                  style: Styles.textStyle.copyWith(
+                    color: isMe ? MyColors.colorWhite : Colors.black87,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
-        child: Text(
-          message,
-          style: TextStyle(
-            color: isMe ? Colors.white : Colors.black87,
-            fontSize: 14,
-          ),
-        ),
+        ],
       ),
     );
   }
@@ -265,19 +296,20 @@ class MessageInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      decoration: const BoxDecoration(color: MyColors.colorWhite),
       height: 60.0,
       child: Row(
         children: [
           Expanded(
             child: TextField(
               controller: controller,
-              decoration: const InputDecoration.collapsed(hintText: "Write a message"),
+              decoration: InputDecoration.collapsed(hintText: "Write a message",hintStyle: Styles.textStyle.copyWith(fontSize: 14,color: MyColors.textColorSecondary,fontWeight: FontWeight.normal)),
               onSubmitted: onSend,
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.send),
+            icon: const ImageIcon(AssetImage("images/icon_send.png")),
             onPressed: () {
               if (controller.text.isNotEmpty) {
                 onSend(controller.text);

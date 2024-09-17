@@ -150,9 +150,9 @@ class _MainScreenState extends State<MainScreen> {
                               ),
                               Expanded(
                                 child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                                   decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                          colors: [
+                                      gradient: LinearGradient(colors: [
                                         Colors.transparent,
                                         Colors.transparent,
                                         MyColors.titleBlueColor
@@ -186,6 +186,7 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                             Expanded(
                               child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0),
                                 decoration: const BoxDecoration(
                                     gradient: LinearGradient(
                                         colors: [
