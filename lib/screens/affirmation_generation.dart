@@ -21,7 +21,7 @@ class _AffirmationGenerationState extends State<AffirmationGeneration> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => AudioplayAppearenceScreen(responseText: chatGptResponse), // Pass responseText here
+          builder: (context) => AudioPlayerAppearanceScreen(responseText: chatGptResponse), // Pass responseText here
         ),
       );
     });

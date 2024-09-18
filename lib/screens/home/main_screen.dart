@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:worthy_you/screens/audio_play_screen.dart';
 import 'package:worthy_you/screens/chatbot/chat_bot_intro_screen.dart';
-import 'package:worthy_you/screens/take_a_quiz.dart';
+import 'package:worthy_you/screens/quiz/take_a_quiz.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
@@ -141,30 +141,26 @@ class _MainScreenState extends State<MainScreen> {
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              Expanded(
-                                child: Image.asset(
-                                  "images/echo.jpg",
-                                  width: width * 0.4,
-                                  fit: BoxFit.cover,
-                                ),
+                              Image.asset(
+                                "images/echo.jpg",
+                                width: width * 0.4,
+                                fit: BoxFit.cover,
                               ),
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                  decoration: const BoxDecoration(
-                                      gradient: LinearGradient(colors: [
-                                        Colors.transparent,
-                                        Colors.transparent,
-                                        MyColors.titleBlueColor
-                                      ],
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter)),
-                                  alignment: Alignment.bottomCenter,
-                                  child: Text(
-                                    Constants.labelEcho,
-                                    style: Styles.textStyleBold
-                                        .copyWith(color: MyColors.colorWhite),
-                                  ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(colors: [
+                                      Colors.transparent,
+                                      Colors.transparent,
+                                      MyColors.titleBlueColor
+                                    ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter)),
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  Constants.labelEcho,
+                                  style: Styles.textStyleBold
+                                      .copyWith(color: MyColors.colorWhite),
                                 ),
                               )
                             ],
@@ -178,30 +174,26 @@ class _MainScreenState extends State<MainScreen> {
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            Expanded(
-                              child: Image.asset(
-                                "images/book_a_session.png",
-                                fit: BoxFit.cover,
-                              ),
+                            Image.asset(
+                              "images/book_a_session.png",
+                              fit: BoxFit.cover,
                             ),
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                        colors: [
-                                      Colors.transparent,
-                                      Colors.transparent,
-                                      MyColors.titleBlueColor
-                                    ],
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter)),
-                                alignment: Alignment.bottomCenter,
-                                child: Text(
-                                  Constants.labelBookSession,
-                                  style: Styles.textStyleBold
-                                      .copyWith(color: MyColors.colorWhite),
-                                ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10.0),
+                              decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: [
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                    MyColors.titleBlueColor
+                                  ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter)),
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                Constants.labelBookSession,
+                                style: Styles.textStyleBold
+                                    .copyWith(color: MyColors.colorWhite),
                               ),
                             )
                           ],

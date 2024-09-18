@@ -28,11 +28,11 @@ dependencies:
   flutter_tts: ^4.0.2
 
   get: ^4.6.6
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.1
 
 
 
@@ -98,12 +98,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
-flutter_launcher_icons:
-  andorid: "launcher_icon"
-  ios: "AppIcon"
-  image_path: "images/worthyyou_logo.jpg"
-  min_sdk_android: 21
-  remove_alpha_ios: true
-
 

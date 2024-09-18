@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'dart:async'; // Import for Timer functionality
+import 'dart:async';
 
-class AudioplayAppearenceScreen extends StatefulWidget {
-  static const routeName = 'AudioplayAppearenceScreen';
-  final String responseText; // The generated affirmation text
+import 'package:get/get.dart'; // Import for Timer functionality
 
-  const AudioplayAppearenceScreen({super.key, required this.responseText});
+class AudioPlayerAppearanceScreen extends StatefulWidget {
+  static const tag = '/audio_player_appearance';
+
+  const AudioPlayerAppearanceScreen({super.key});
 
   @override
-  State<AudioplayAppearenceScreen> createState() => _AudioplayAppearenceScreenState();
+  State<AudioPlayerAppearanceScreen> createState() => _AudioPlayerAppearanceScreenState();
 }
 
-class _AudioplayAppearenceScreenState extends State<AudioplayAppearenceScreen> {
+class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScreen> {
   FlutterTts flutterTts = FlutterTts();
   bool isPlaying = false;
+  String responseText = "";
   Duration currentDuration = Duration.zero;
   Duration totalDuration = Duration.zero;
   Timer? _timer;  // Timer to simulate progress
@@ -23,7 +25,8 @@ class _AudioplayAppearenceScreenState extends State<AudioplayAppearenceScreen> {
   void initState() {
     super.initState();
     _setupTTS();
-    _calculateEstimatedDuration(); // Calculate the estimated audio duration
+    _calculateEstimatedDuration();
+    responseText = Get.arguments ?? "";
   }
 
   Future<void> _setupTTS() async {
@@ -31,7 +34,6 @@ class _AudioplayAppearenceScreenState extends State<AudioplayAppearenceScreen> {
     await flutterTts.setSpeechRate(0.5);   // Set speech rate (adjust as needed)
     await flutterTts.setPitch(1.0);        // Set the pitch of the voice
 
-    // Start listening to the onComplete event to stop the timer
     flutterTts.setCompletionHandler(() {
       setState(() {
         isPlaying = false;
@@ -43,7 +45,7 @@ class _AudioplayAppearenceScreenState extends State<AudioplayAppearenceScreen> {
   // Calculate the estimated duration of the speech based on word count and speech rate
   void _calculateEstimatedDuration() {
     double speechRate = 0.5; // Keep it consistent with the set speech rate
-    double estimatedSeconds = _estimateSpeechDuration(widget.responseText, speechRate);
+    double estimatedSeconds = _estimateSpeechDuration(responseText, speechRate);
     setState(() {
       totalDuration = Duration(seconds: estimatedSeconds.toInt());
     });
@@ -57,8 +59,8 @@ class _AudioplayAppearenceScreenState extends State<AudioplayAppearenceScreen> {
 
   // Method to play the generated affirmation text
   Future<void> _speak() async {
-    if (widget.responseText.isNotEmpty) {
-      var result = await flutterTts.speak(widget.responseText);
+    if (responseText.isNotEmpty) {
+      var result = await flutterTts.speak(responseText);
       if (result == 1) {
         setState(() => isPlaying = true);
         _startProgress(); // Start updating the progress bar
@@ -77,10 +79,10 @@ class _AudioplayAppearenceScreenState extends State<AudioplayAppearenceScreen> {
 
   // Start the progress bar timer
   void _startProgress() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (currentDuration < totalDuration) {
-          currentDuration += Duration(seconds: 1);
+          currentDuration += const Duration(seconds: 1);
         } else {
           _stopProgress(); // Stop the timer when the duration is completed
         }
@@ -163,9 +165,9 @@ class _AudioplayAppearenceScreenState extends State<AudioplayAppearenceScreen> {
               const SizedBox(height: 20),
 
               // Image Section
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 110,
-                backgroundImage: const AssetImage('images/Group15.png'), // Assuming image path is correct
+                backgroundImage: AssetImage('images/Group15.png'), // Assuming image path is correct
               ),
 
               const SizedBox(height: 20),
@@ -183,7 +185,7 @@ class _AudioplayAppearenceScreenState extends State<AudioplayAppearenceScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
-                      widget.responseText, // Display the GPT response here
+                      responseText, // Display the GPT response here
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 18,

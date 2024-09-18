@@ -11,6 +11,7 @@ class Constants{
 
   static const String labelSkip="Skip";
   static const String labelNext="Next";
+  static const String labelBack="Back";
   static const String labelGetStarted="Get Started";
 
   static const String labelMyAffirmations="My Affirmations";
@@ -26,4 +27,17 @@ class Constants{
 
   static const String labelVentingBot="Venting Bot";
   static const String chatBotIntroInfo="Hello Nice to see you here! By pressing the 'Start chat' button you agree to have your personal data processed as described in our Privacy Policy";
+  static const String labelFiguringInsecurities="Figuring out the insecurities";
+  static const String titleQuizResults="Great job on completing the quiz!\nHere’s a snapshot of your insecurities:";
+  static const String labelCareerCompetence="Career Competence";
+  static const String labelSocialAcceptance="Social Acceptance";
+  static const String labelAppearance="Appearance";
+  static const String labelAcademicPerformance="Academic Performance";
+
+  static const String labelNextStep="Next Step";
+  static const String labelListenPersonalizedAffirmations="Listen to Personalized Affirmations:";
+  static const String labelListenPersonalizedAffirmationsInfo="Tailored to address your specific insecurities.";
+
+  static const String titleAffirmationsCategories="Affirmations Categories";
+  static const String infoAffirmationsCategories="These results highlight areas where you might feel less confident. Understanding these can help guide your personal growth.";
 }

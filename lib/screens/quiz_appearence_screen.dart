@@ -103,7 +103,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AudioplayAppearenceScreen(responseText: chatGptResponse),
+            builder: (context) => AudioPlayerAppearanceScreen(responseText: chatGptResponse),
           ),
         );
       } else {

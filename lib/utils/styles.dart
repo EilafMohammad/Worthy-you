@@ -8,6 +8,7 @@ class Styles {
 
   static const TextStyle titleStyle = TextStyle(color: MyColors.titleBlueColor, fontFamily: "Roboto", fontSize: 24, fontWeight: FontWeight.w700);
   static const TextStyle subHeadingStyle = TextStyle(color: MyColors.colorBlack, fontFamily: "Roboto", fontSize: 20, fontWeight: FontWeight.w600);
+  static const TextStyle questionStyle = TextStyle(color: MyColors.colorBlack, fontFamily: "Roboto", fontSize: 20, fontWeight: FontWeight.w500);
 
   static const TextStyle headingStyle = TextStyle(color: MyColors.colorBlack, fontFamily: "Roboto", fontSize: 20, fontWeight: FontWeight.w600);
   static const TextStyle inputFieldTextStyle = TextStyle(color: MyColors.colorBlack, fontFamily: "Roboto", fontSize: 14);

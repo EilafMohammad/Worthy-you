@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:worthy_you/screens/splash_screen.dart';
 
 import 'routes/rutes.dart';
+import 'screens/quiz_path_screen.dart';
 import 'utils/constants.dart'; // Correct import
 
 void main() {
