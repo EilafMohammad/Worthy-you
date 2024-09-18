@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:worthy_you/screens/audioPlay_appearence_screen.dart';
@@ -98,14 +99,8 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
         final chatGptResponse = responseBody['choices'][0]['message']['content'] ?? "No response";
-        
-        // Navigate to AudioplayAppearanceScreen with GPT response
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AudioPlayerAppearanceScreen(responseText: chatGptResponse),
-          ),
-        );
+
+        Get.offAndToNamed(AudioPlayerAppearanceScreen.tag,arguments: chatGptResponse);
       } else {
         _showError("Failed to get a response from ChatGPT");
       }

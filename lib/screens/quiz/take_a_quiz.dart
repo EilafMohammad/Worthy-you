@@ -16,10 +16,10 @@ class QuizScreen extends StatefulWidget {
 class _QuizScreenState extends State<QuizScreen> {
   int _currentQuestionIndex = 0;
   final List<String> _questions = [
-    "When you feel self-conscious, which of the following aspects do you often focus on the most? (you can select multiple)",
-    "How do societal beauty standards influence your perception of your own appearance?",
-    "When you look in the mirror, what specific features or aspects of your appearance do you feel most dissatisfied with?",
-    "In social settings, what specific behaviors or situations trigger feelings of insecurity or rejection?"
+    // "When you feel self-conscious, which of the following aspects do you often focus on the most? (you can select multiple)",
+    // "How do societal beauty standards influence your perception of your own appearance?",
+    // "When you look in the mirror, what specific features or aspects of your appearance do you feel most dissatisfied with?",
+    // "In social settings, what specific behaviors or situations trigger feelings of insecurity or rejection?"
   ];
 
   final List<List<String>> _options = [

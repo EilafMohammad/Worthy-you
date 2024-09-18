@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:worthy_you/screens/audioPlay_appearence_screen.dart'; // Import the AudioPlayAppearanceScreen
 
 class AffirmationGeneration extends StatefulWidget {
@@ -13,17 +14,9 @@ class _AffirmationGenerationState extends State<AffirmationGeneration> {
   void initState() {
     super.initState();
 
-    // Simulated ChatGPT response (replace with actual value)
     String chatGptResponse = "You are worthy, confident, and strong!"; // Replace this with actual dynamic data
-
-    // Navigate to AudioplayAppearenceScreen after 3 seconds with the responseText
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AudioPlayerAppearanceScreen(responseText: chatGptResponse), // Pass responseText here
-        ),
-      );
+      Get.offAndToNamed(AudioPlayerAppearanceScreen.tag,arguments: chatGptResponse);
     });
   }
 

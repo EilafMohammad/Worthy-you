@@ -57,9 +57,9 @@ class _MainScreenState extends State<MainScreen> {
                     ],
                   ),
                 ),
-                InkWell(
+                GestureDetector(
                   onTap: () {
-                    Get.toNamed(AudioPlayScreen.tag);
+                    // Get.toNamed(AudioPlayScreen.tag);
                   },
                   child: const CircleAvatar(
                     radius: 30,
