@@ -62,7 +62,7 @@ class _QuizScreenState extends State<QuizScreen> {
         ),
         backgroundColor: MyColors.backgroundColor,
         body: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
