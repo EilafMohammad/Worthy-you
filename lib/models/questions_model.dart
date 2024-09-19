@@ -9,77 +9,117 @@ QuestionsModel questionsModelFromJson(String str) => QuestionsModel.fromJson(jso
 String questionsModelToJson(QuestionsModel data) => json.encode(data.toJson());
 
 class QuestionsModel {
-  final Nce? appearance;
-  final Nce? socialAcceptance;
-  final Nce? academicPerformance;
-  final Nce? careerCompetence;
+  final List<QuestionsDatum>? questionsData;
 
   QuestionsModel({
-    this.appearance,
-    this.socialAcceptance,
-    this.academicPerformance,
-    this.careerCompetence,
+    this.questionsData,
   });
 
   QuestionsModel copyWith({
-    Nce? appearance,
-    Nce? socialAcceptance,
-    Nce? academicPerformance,
-    Nce? careerCompetence,
+    List<QuestionsDatum>? questionsData,
   }) =>
       QuestionsModel(
-        appearance: appearance ?? this.appearance,
-        socialAcceptance: socialAcceptance ?? this.socialAcceptance,
-        academicPerformance: academicPerformance ?? this.academicPerformance,
-        careerCompetence: careerCompetence ?? this.careerCompetence,
+        questionsData: questionsData ?? this.questionsData,
       );
 
   factory QuestionsModel.fromJson(Map<String, dynamic> json) => QuestionsModel(
-    appearance: json["appearance"] == null ? null : Nce.fromJson(json["appearance"]),
-    socialAcceptance: json["social_acceptance"] == null ? null : Nce.fromJson(json["social_acceptance"]),
-    academicPerformance: json["academic_performance"] == null ? null : Nce.fromJson(json["academic_performance"]),
-    careerCompetence: json["career_competence"] == null ? null : Nce.fromJson(json["career_competence"]),
+    questionsData: json["questionsData"] == null ? [] : List<QuestionsDatum>.from(json["questionsData"]!.map((x) => QuestionsDatum.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "appearance": appearance?.toJson(),
-    "social_acceptance": socialAcceptance?.toJson(),
-    "academic_performance": academicPerformance?.toJson(),
-    "career_competence": careerCompetence?.toJson(),
+    "questionsData": questionsData == null ? [] : List<dynamic>.from(questionsData!.map((x) => x.toJson())),
   };
 }
 
-class Nce {
-  final String? key;
-  final String? scenario;
-  final List<String>? questions;
+class QuestionsDatum {
+  final Scenario? scenario;
+  final List<Datum>? data;
 
-  Nce({
-    this.key,
+  QuestionsDatum({
     this.scenario,
-    this.questions,
+    this.data,
   });
 
-  Nce copyWith({
-    String? key,
-    String? scenario,
-    List<String>? questions,
+  QuestionsDatum copyWith({
+    Scenario? scenario,
+    List<Datum>? data,
   }) =>
-      Nce(
-        key: key ?? this.key,
+      QuestionsDatum(
         scenario: scenario ?? this.scenario,
-        questions: questions ?? this.questions,
+        data: data ?? this.data,
       );
 
-  factory Nce.fromJson(Map<String, dynamic> json) => Nce(
-    key: json["key"],
-    scenario: json["scenario"],
-    questions: json["questions"] == null ? [] : List<String>.from(json["questions"]!.map((x) => x)),
+  factory QuestionsDatum.fromJson(Map<String, dynamic> json) => QuestionsDatum(
+    scenario: json["scenario"] == null ? null : Scenario.fromJson(json["scenario"]),
+    data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "key": key,
-    "scenario": scenario,
-    "questions": questions == null ? [] : List<dynamic>.from(questions!.map((x) => x)),
+    "scenario": scenario?.toJson(),
+    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+  };
+}
+
+class Datum {
+  final String? key;
+  final String? question;
+  final List<String>? options;
+
+  Datum({
+    this.key,
+    this.question,
+    this.options,
+  });
+
+  Datum copyWith({
+    String? key,
+    String? question,
+    List<String>? options,
+  }) =>
+      Datum(
+        key: key ?? this.key,
+        question: question ?? this.question,
+        options: options ?? this.options,
+      );
+
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    key: json["key"],
+    question: json["question"],
+    options: json["options"] == null ? [] : List<String>.from(json["options"]!.map((x) => x)),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "key":key,
+    "question": question,
+    "options": options == null ? [] : List<dynamic>.from(options!.map((x) => x)),
+  };
+}
+
+class Scenario {
+  final String? question;
+  final List<String>? options;
+
+  Scenario({
+    this.question,
+    this.options,
+  });
+
+  Scenario copyWith({
+    String? question,
+    List<String>? options,
+  }) =>
+      Scenario(
+        question: question ?? this.question,
+        options: options ?? this.options,
+      );
+
+  factory Scenario.fromJson(Map<String, dynamic> json) => Scenario(
+    question: json["question"],
+    options: json["options"] == null ? [] : List<String>.from(json["options"]!.map((x) => x)),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "question": question,
+    "options": options == null ? [] : List<dynamic>.from(options!.map((x) => x)),
   };
 }
