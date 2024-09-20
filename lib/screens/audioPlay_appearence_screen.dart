@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'dart:async';
 
-import 'package:get/get.dart'; // Import for Timer functionality
+import 'package:get/get.dart';
+import 'package:worthy_you/utils/colors.dart'; // Import for Timer functionality
 
 class AudioPlayerAppearanceScreen extends StatefulWidget {
   static const tag = '/audio_player_appearance';
@@ -138,7 +139,7 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xffFAFDFF),
+        backgroundColor: MyColors.backgroundColor,
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

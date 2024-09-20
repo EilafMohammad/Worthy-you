@@ -6,6 +6,7 @@ import 'package:worthy_you/screens/audio_play_screen.dart';
 import 'package:worthy_you/screens/chatbot/chat_bot.dart';
 import 'package:worthy_you/screens/chatbot/chat_bot_intro_screen.dart';
 import 'package:worthy_you/screens/home/home_screen.dart';
+import 'package:worthy_you/screens/loading_screen.dart';
 import 'package:worthy_you/screens/onbaording/onboarding_screen.dart';
 import 'package:worthy_you/screens/quiz/affirmation_categories_screen.dart';
 import 'package:worthy_you/screens/quiz/specific/speech_text_screen.dart';
@@ -25,6 +26,7 @@ class AppRoutes {
     Generalized.generalized(AffirmationCategoriesScreen.tag, () =>  AffirmationCategoriesScreen(), bindings: []),
     Generalized.generalized(AudioPlayerAppearanceScreen.tag, () =>  const AudioPlayerAppearanceScreen(), bindings: []),
     Generalized.generalized(SpeechToTextScreen.tag, () =>  const SpeechToTextScreen(), bindings: []),
+    Generalized.generalized(LoadingScreen.tag, () =>  const LoadingScreen(), bindings: []),
   ];
 }
 

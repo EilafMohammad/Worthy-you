@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:worthy_you/extensions/map_extentions.dart';
 import 'package:worthy_you/screens/audioPlay_appearence_screen.dart';
+import 'package:worthy_you/screens/loading_screen.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
@@ -66,11 +67,17 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
       _isButtonPressed = false;
     });
     _speech.stop();
-    // Do not automatically send to ChatGPT. Let the user review the text.
   }
 
   Future<void> _sendToChatGPT(String userInput) async {
-    const apiKey = 'sk-KSnHdir8kGGHH6qyB-gl031jYCTnsD4xJHY9BmEB6rT3BlbkFJKmNOdh2xmpnCX60p_grMG_EXkC2N2LyGm3DdfhQXIA'; // Add your API key here
+    Get.toNamed(LoadingScreen.tag,arguments: userInput)?.then((val){
+      if(val is String && val.contains("Error")){
+        _showError(val);
+      }else{
+        Get.offAndToNamed(AudioPlayerAppearanceScreen.tag,arguments: val);
+      }
+    });
+    /*const apiKey = 'sk-KSnHdir8kGGHH6qyB-gl031jYCTnsD4xJHY9BmEB6rT3BlbkFJKmNOdh2xmpnCX60p_grMG_EXkC2N2LyGm3DdfhQXIA'; // Add your API key here
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     final headers = {
@@ -87,10 +94,10 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
     {
       "role": "system",
       "content": """
-        You are a professional psychology therapist. Your job is to provide users with positive affirmations in an inner voice style. These affirmations should be structured like: 
+        You are a professional psychology therapist. Your job is to provide users with positive affirmations in an inner voice style. These affirmations should be structured like:
         - "I’m confident and strong."
         - "I am worthy and capable."
-        The goal is for users to repeat these affirmations in their own voice. 
+        The goal is for users to repeat these affirmations in their own voice.
         Rules:
         1. The affirmation should be based on the user's self-image and appearance.
         2. Provide only one affirmation in response to the user's input.
@@ -121,7 +128,7 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
       }
     } catch (e) {
       _showError("Error: $e");
-    }
+    }*/
   }
 
   void _showError(String message) {
@@ -263,8 +270,7 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
                   onPressed: () {
                     // Send to ChatGPT if the user submits the text
                     if (_text.isNotEmpty) {
-                      _sendToChatGPT(
-                          _text); // Send the text to ChatGPT only after pressing Submit
+                      _sendToChatGPT(_text); // Send the text to ChatGPT only after pressing Submit
                     } else {
                       _sendToChatGPT(
                           "I don't like my nose"); // Auto-send "I feel sad" if no input
