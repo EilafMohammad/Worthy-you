@@ -413,31 +413,31 @@ class Constants{
         "id": 3,
         "data": [
           {
-            "catId": 4,
+            "catId": 3,
             "questionId": 0000,
             "key": "academic_performance",
             "question": "Do you currently attend school, college, or any educational program?",
             "options": [
               {
-                "catId": 4,
+                "catId": 3,
                 "questionId": 0000,
                 "optionId": 0001,
                 "option": "Yes, I’m currently enrolled in an educational program.",
               },
               {
-                "catId": 4,
+                "catId": 3,
                 "questionId": 0000,
                 "optionId": 0002,
                 "option":"No, but I’ve completed my education.",
               },
               {
-                "catId": 4,
+                "catId": 3,
                 "questionId": 0000,
                 "optionId": 0003,
                 "option":"No, and I have no plans to pursue education.",
               },
               {
-                "catId": 4,
+                "catId": 3,
                 "questionId": 0000,
                 "optionId": 0004,
                 "option":"I’m considering going back to school in the future."
@@ -834,7 +834,7 @@ class Constants{
               {
                 "catId": 4,
                 "questionId": 0005,
-                "optionId": 0053,
+                "optionId": 0054,
                 "option":
                     "I feel overwhelmed and fear that I’ll let my team down"
               }

@@ -1,16 +1,43 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:worthy_you/extensions/widget_extentions.dart';
+import 'package:worthy_you/models/questions_model.dart';
 import 'package:worthy_you/screens/quiz/affirmation_categories_screen.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
 
-class QuizResultsScreen extends StatelessWidget {
+class QuizResultsScreen extends StatefulWidget {
   static const tag = '/quiz_results_screen';
 
   const QuizResultsScreen({super.key});
+
+  @override
+  State<QuizResultsScreen> createState() => _QuizResultsScreenState();
+}
+
+class _QuizResultsScreenState extends State<QuizResultsScreen> {
+  List<Option?> _selectedQuestions = [];
+  List<Option?> _appearanceList = [];
+  List<Option?> _socialAcceptance = [];
+  List<Option?> _academicPerformance = [];
+  List<Option?> _careerCompetence = [];
+
+  @override
+  void initState() {
+    super.initState();
+    var list = Get.arguments;
+    if (list is List<Option?>) {
+      _selectedQuestions = list;
+      _appearanceList = list.where((item) => item?.catId == 1).toList();
+      _socialAcceptance = list.where((item) => item?.catId == 2).toList();
+      _academicPerformance = list.where((item) => item?.catId == 3).toList();
+      _careerCompetence = list.where((item) => item?.catId == 4).toList();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,18 +81,18 @@ class QuizResultsScreen extends StatelessWidget {
                           flex: 4,
                           child: Text(
                             Constants.labelCareerCompetence,
-                            textAlign: TextAlign.right,
-                            style:Styles.textStyle.copyWith(fontSize: 12.0),
-                          )),
+                          textAlign: TextAlign.right,
+                          style: Styles.textStyle.copyWith(fontSize: 12.0),
+                        ),
+                      ),
                       Expanded(
                         flex: 6,
                         child: LinearPercentIndicator(
                           lineHeight: 30.0,
-                          percent: 0.5,
+                          percent: getInsecurityPercentage(list: _careerCompetence),
                           center: Text(
-                            "50.0%",
-                            style: Styles.textStyle
-                                .copyWith(color: MyColors.colorWhite),
+                            "${getInsecurityPercentage(list: _careerCompetence)*100}%",
+                            style: Styles.textStyle.copyWith(color: MyColors.colorWhite),
                           ),
                           progressColor: MyColors.progressColor,
                           backgroundColor: MyColors.progressBackground,
@@ -88,10 +115,11 @@ class QuizResultsScreen extends StatelessWidget {
                         flex: 6,
                         child: LinearPercentIndicator(
                           lineHeight: 30.0,
-                          percent: 0.5,
+                          percent: getInsecurityPercentage(list: _socialAcceptance),
                           center: Text(
-                            "50.0%",
-                            style: Styles.textStyle.copyWith(color: MyColors.colorWhite),
+                            "${getInsecurityPercentage(list: _socialAcceptance)*100}%",
+                            style: Styles.textStyle
+                                .copyWith(color: MyColors.colorWhite),
                           ),
                           progressColor: MyColors.progressColor,
                           backgroundColor: MyColors.progressBackground,
@@ -108,16 +136,15 @@ class QuizResultsScreen extends StatelessWidget {
                           child: Text(
                             Constants.labelAppearance,
                             textAlign: TextAlign.right,
-                            style:
-                            Styles.textStyle.copyWith(fontSize: 12.0),
+                            style: Styles.textStyle.copyWith(fontSize: 12.0),
                           )),
                       Expanded(
                         flex: 6,
                         child: LinearPercentIndicator(
                           lineHeight: 30.0,
-                          percent: 0.5,
+                          percent: getInsecurityPercentage(list: _appearanceList),
                           center: Text(
-                            "50.0%",
+                            "${getInsecurityPercentage(list: _appearanceList)*100}%",
                             style: Styles.textStyle
                                 .copyWith(color: MyColors.colorWhite),
                           ),
@@ -136,16 +163,15 @@ class QuizResultsScreen extends StatelessWidget {
                           child: Text(
                             Constants.labelAcademicPerformance,
                             textAlign: TextAlign.right,
-                            style:
-                            Styles.textStyle.copyWith(fontSize: 12.0),
+                            style: Styles.textStyle.copyWith(fontSize: 12.0),
                           )),
                       Expanded(
                         flex: 6,
                         child: LinearPercentIndicator(
                           lineHeight: 30.0,
-                          percent: 0.5,
+                          percent: getInsecurityPercentage(list: _academicPerformance),
                           center: Text(
-                            "50.0%",
+                            "${getInsecurityPercentage(list: _academicPerformance)*100}%",
                             style: Styles.textStyle
                                 .copyWith(color: MyColors.colorWhite),
                           ),
@@ -172,14 +198,20 @@ class QuizResultsScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(Constants.labelNextStep,
-                          style: Styles.subHeadingStyle.copyWith(color: MyColors.colorWhite),
+                        Text(
+                          Constants.labelNextStep,
+                          style: Styles.subHeadingStyle
+                              .copyWith(color: MyColors.colorWhite),
                         ),
-                        Text(Constants.labelListenPersonalizedAffirmations,
-                          style: Styles.textStyleBold.copyWith(color: MyColors.colorWhite),
+                        Text(
+                          Constants.labelListenPersonalizedAffirmations,
+                          style: Styles.textStyleBold
+                              .copyWith(color: MyColors.colorWhite),
                         ),
-                        Text(Constants.labelListenPersonalizedAffirmationsInfo,
-                          style: Styles.textStyleBold.copyWith(color: MyColors.colorWhite),
+                        Text(
+                          Constants.labelListenPersonalizedAffirmationsInfo,
+                          style: Styles.textStyleBold
+                              .copyWith(color: MyColors.colorWhite),
                         ),
                       ],
                     ),
@@ -194,7 +226,9 @@ class QuizResultsScreen extends StatelessWidget {
                         "images/icon_back.png",
                       ),
                       size: 30.0,
-                    ),color: MyColors.colorWhite,).rotate(degrees: 180),
+                    ),
+                    color: MyColors.colorWhite,
+                  ).rotate(degrees: 180),
                 ],
               ),
               const SizedBox(height: 20),
@@ -203,7 +237,31 @@ class QuizResultsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  getSum({required List<Option?> list}){
+    // Get all optionId's and sum the last digit of each optionId
+    int sum = list
+        .map((item) => item?.optionId ?? 0)        // Extract the optionId, default to 0 if null
+        .map((optionId) => optionId % 10)          // Get the last digit of each optionId
+        .fold(0, (prev, current) => prev + current); // Sum the last digits
+
+    if (kDebugMode) {
+      print("Sum of last digits--------->: $sum");
     }
+    return sum;
+  }
+
+  getInsecurityPercentage({required List<Option?> list}){
+    var sum = getSum(list: list);
+    var insecurityPercentage = (sum - 5)/(20-5);
+    if (kDebugMode) {
+      print("Sum of last digits--------->: $sum");
+    }
+
+    if(insecurityPercentage>1){
+      insecurityPercentage = 1.0;
+    }
+    return double.parse(insecurityPercentage.toStringAsFixed(2));
+  }
 }
-
-

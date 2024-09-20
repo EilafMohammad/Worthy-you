@@ -19,15 +19,16 @@ class QuizScreen extends StatefulWidget {
 class _QuizScreenState extends State<QuizScreen> {
   int _currentQuestionIndex = 0;
   List<Data> _questions = [];
-  List<Option?> _selectedQuestions = [];
+  final List<Option?> _selectedQuestions = [];
 
-  void _onOptionSelected() {
+  void _onOptionSelected({required Option option}) {
     if (_currentQuestionIndex < _questions.length - 1) {
       setState(() {
+        addItem(option: option);
         _currentQuestionIndex++;
       });
     } else {
-      Get.toNamed(QuizResultsScreen.tag);
+      Get.toNamed(QuizResultsScreen.tag,arguments: _selectedQuestions);
     }
   }
 
@@ -79,8 +80,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       children: _questions[_currentQuestionIndex].options!.map((option) {
                         return GestureDetector(
                           onTap: (){
-                            addItem(option: option);
-                            _onOptionSelected();
+                            _onOptionSelected(option: option);
                           },
                           child: Align(
                             alignment: Alignment.center,
