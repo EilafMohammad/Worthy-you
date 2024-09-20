@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:worthy_you/screens/audioPlay_appearence_screen.dart'; // Import the AudioPlayAppearanceScreen
 
-class AffirmationGeneration extends StatefulWidget {
-  const AffirmationGeneration({super.key});
+class LoadingScreen extends StatefulWidget {
+  const LoadingScreen({super.key});
 
   @override
-  _AffirmationGenerationState createState() => _AffirmationGenerationState();
+  _LoadingScreenState createState() => _LoadingScreenState();
 }
 
-class _AffirmationGenerationState extends State<AffirmationGeneration> {
+class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();

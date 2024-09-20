@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:worthy_you/extensions/widget_extentions.dart';
-import 'package:worthy_you/screens/path_affirmation_categories_screen.dart';
+import 'package:worthy_you/screens/quiz/affirmation_categories_screen.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';

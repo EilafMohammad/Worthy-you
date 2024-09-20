@@ -44,6 +44,13 @@ class Constants{
 
   static const String titleAffirmationsCategories="Affirmations Categories";
   static const String infoAffirmationsCategories="These results highlight areas where you might feel less confident. Understanding these can help guide your personal growth.";
+  static const String labelPressHoldMic="Press the mic, and hold to record";
+
+
+  static const String infoAppearance="Do you often feel self-conscious about your appearance? What specific aspects of your appearance are most troubling to you, and how do these feelings affect your self-image and daily life?";
+  static const String infoSocialAcceptance="Do you often feel insecure about how others perceive you, and why do you think that is? How does it affect your self-confidence?";
+  static const String infoAcademicPerformance="Do you often feel anxious or uncertain about your academic performance? What do you think might be causing these feelings, and how does it impact your overall self-esteem?";
+  static const String infoCareerCompetence="Do you ever question your ability to succeed in your career? What experiences or thoughts contribute to this doubt, and how does it affect your confidence in your professional skills?";
 
   static const questions = {
     "questionsData":[
@@ -308,4 +315,7 @@ class Constants{
   };
 
   static var questionsModel = questionsModelFromJson(jsonEncode(questions));
+
+  static const String labelClear ="Clear";
+  static const String labelSubmit ="Submit";
 }

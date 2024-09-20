@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:worthy_you/models/questions_model.dart';
-import 'package:worthy_you/screens/quiz_path_screen.dart';
+import 'package:worthy_you/screens/quiz/quiz_results_screen.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
@@ -19,6 +19,7 @@ class QuizScreen extends StatefulWidget {
 class _QuizScreenState extends State<QuizScreen> {
   int _currentQuestionIndex = 0;
   List<Datum> _questions = [];
+  List<Datum> _selectedQuestions = [];
 
   void _onOptionSelected() {
     if (_currentQuestionIndex < _questions.length - 1) {
@@ -51,7 +52,8 @@ class _QuizScreenState extends State<QuizScreen> {
                   "images/icon_back.png",
                 ),
                 size: 30.0,
-              )),
+              )
+          ),
           elevation: 0,
           title: const Text(
             Constants.labelFiguringInsecurities,
@@ -102,6 +104,16 @@ class _QuizScreenState extends State<QuizScreen> {
                     )
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: LinearProgressIndicator(
+                  borderRadius: BorderRadius.circular(10),
+                  value: _progress,
+                  backgroundColor: const Color(0XFFD9D9D9),
+                  color: const Color(0XFF8367C7),
+                  minHeight: 13,
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -139,6 +151,10 @@ class _QuizScreenState extends State<QuizScreen> {
         ),
       ),
     );
+  }
+
+  double get _progress {
+    return (_currentQuestionIndex + 1) / _questions.length;
   }
 
   List<Datum> getAllQuestions() {

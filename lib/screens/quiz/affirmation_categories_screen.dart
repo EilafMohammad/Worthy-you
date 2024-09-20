@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:worthy_you/screens/audioPlay_appearence_screen.dart';
+import 'package:worthy_you/screens/quiz/specific/speech_text_screen.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
@@ -80,7 +81,42 @@ class AffirmationCategoriesScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: (){
-                      Get.toNamed(AudioPlayerAppearanceScreen.tag);
+                      // Get.toNamed(AudioPlayerAppearanceScreen.tag);
+                      switch(index){
+                        case 0:{
+                          var args  = {
+                            "title":Constants.labelAppearance,
+                            "heading":Constants.infoAppearance,
+                            "image":"images/icon_appearance.png"
+                          };
+                          Get.toNamed(SpeechToTextScreen.tag,arguments: args);
+
+                        }
+                        case 1:{
+                          var args  = {
+                            "title":Constants.labelSocialAcceptance,
+                            "heading":Constants.infoSocialAcceptance,
+                            "image":"images/icon_social_acceptance.png"
+                          };
+                          Get.toNamed(SpeechToTextScreen.tag,arguments: args);
+                        }
+                        case 2:{
+                          var args  = {
+                            "title":Constants.labelAcademicPerformance,
+                            "heading":Constants.infoAcademicPerformance,
+                            "image":"images/icon_academic_performance.png"
+                          };
+                          Get.toNamed(SpeechToTextScreen.tag,arguments: args);
+                        }
+                        case 3:{
+                          var args  = {
+                            "title":Constants.labelCareerCompetence,
+                            "heading":Constants.infoCareerCompetence,
+                            "image":"images/icon_career_competence.png"
+                          };
+                          Get.toNamed(SpeechToTextScreen.tag,arguments: args);
+                        }
+                      }
                     },
                     child: Container(
                       height: 150,
