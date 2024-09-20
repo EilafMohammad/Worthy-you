@@ -9,117 +9,177 @@ QuestionsModel questionsModelFromJson(String str) => QuestionsModel.fromJson(jso
 String questionsModelToJson(QuestionsModel data) => json.encode(data.toJson());
 
 class QuestionsModel {
-  final List<QuestionsDatum>? questionsData;
+  final List<QuestionData>? questionsData;
 
   QuestionsModel({
     this.questionsData,
   });
 
+  // Decoder: fromJson
+  factory QuestionsModel.fromJson(Map<String, dynamic> json) {
+    return QuestionsModel(
+      questionsData: (json['questionsData'] as List<dynamic>?)
+          ?.map((item) => QuestionData.fromJson(item))
+          .toList(),
+    );
+  }
+
+  // Encoder: toJson
+  Map<String, dynamic> toJson() {
+    return {
+      'questionsData': questionsData?.map((item) => item.toJson()).toList(),
+    };
+  }
+
+  // CopyWith function
   QuestionsModel copyWith({
-    List<QuestionsDatum>? questionsData,
-  }) =>
-      QuestionsModel(
-        questionsData: questionsData ?? this.questionsData,
-      );
-
-  factory QuestionsModel.fromJson(Map<String, dynamic> json) => QuestionsModel(
-    questionsData: json["questionsData"] == null ? [] : List<QuestionsDatum>.from(json["questionsData"]!.map((x) => QuestionsDatum.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "questionsData": questionsData == null ? [] : List<dynamic>.from(questionsData!.map((x) => x.toJson())),
-  };
+    List<QuestionData>? questionsData,
+  }) {
+    return QuestionsModel(
+      questionsData: questionsData ?? this.questionsData,
+    );
+  }
 }
 
-class QuestionsDatum {
-  final Scenario? scenario;
-  final List<Datum>? data;
+class QuestionData {
+  final int? id;
+  final List<Data>? data;
 
-  QuestionsDatum({
-    this.scenario,
+  QuestionData({
+    this.id,
     this.data,
   });
 
-  QuestionsDatum copyWith({
-    Scenario? scenario,
-    List<Datum>? data,
-  }) =>
-      QuestionsDatum(
-        scenario: scenario ?? this.scenario,
-        data: data ?? this.data,
-      );
+  // Decoder: fromJson
+  factory QuestionData.fromJson(Map<String, dynamic> json) {
+    return QuestionData(
+      id: json['id'] as int?,
+      data: (json['data'] as List<dynamic>?)?.map((item) => Data.fromJson(item)).toList(),
+    );
+  }
 
-  factory QuestionsDatum.fromJson(Map<String, dynamic> json) => QuestionsDatum(
-    scenario: json["scenario"] == null ? null : Scenario.fromJson(json["scenario"]),
-    data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
-  );
+  // Encoder: toJson
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'data': data?.map((item) => item.toJson()).toList(),
+    };
+  }
 
-  Map<String, dynamic> toJson() => {
-    "scenario": scenario?.toJson(),
-    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
-  };
+  // CopyWith function
+  QuestionData copyWith({
+    int? id,
+    List<Data>? data,
+  }) {
+    return QuestionData(
+      id: id ?? this.id,
+      data: data ?? this.data,
+    );
+  }
 }
 
-class Datum {
+class Data {
+  final int? catId;
+  final int? questionId;
   final String? key;
   final String? question;
-  final List<String>? options;
+  final List<Option>? options;
 
-  Datum({
+  Data({
+    this.catId,
+    this.questionId,
     this.key,
     this.question,
     this.options,
   });
 
-  Datum copyWith({
+  // Decoder: fromJson
+  factory Data.fromJson(Map<String, dynamic> json) {
+    return Data(
+      catId: json['catId'] as int?,
+      questionId: json['questionId'] as int?,
+      key: json['key'] as String?,
+      question: json['question'] as String?,
+      options: (json['options'] as List<dynamic>?)
+          ?.map((item) => Option.fromJson(item))
+          .toList(),
+    );
+  }
+
+  // Encoder: toJson
+  Map<String, dynamic> toJson() {
+    return {
+      'catId': catId,
+      'questionId': questionId,
+      'key': key,
+      'question': question,
+      'options': options?.map((item) => item.toJson()).toList(),
+    };
+  }
+
+  // CopyWith function
+  Data copyWith({
+    int? catId,
+    int? questionId,
     String? key,
     String? question,
-    List<String>? options,
-  }) =>
-      Datum(
-        key: key ?? this.key,
-        question: question ?? this.question,
-        options: options ?? this.options,
-      );
-
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-    key: json["key"],
-    question: json["question"],
-    options: json["options"] == null ? [] : List<String>.from(json["options"]!.map((x) => x)),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "key":key,
-    "question": question,
-    "options": options == null ? [] : List<dynamic>.from(options!.map((x) => x)),
-  };
+    List<Option>? options,
+  }) {
+    return Data(
+      catId: catId ?? this.catId,
+      questionId: questionId ?? this.questionId,
+      key: key ?? this.key,
+      question: question ?? this.question,
+      options: options ?? this.options,
+    );
+  }
 }
 
-class Scenario {
-  final String? question;
-  final List<String>? options;
+class Option {
+  final int? catId;
+  final int? questionId;
+  final int? optionId;
+  final String? option;
 
-  Scenario({
-    this.question,
-    this.options,
+  Option({
+    this.catId,
+    this.questionId,
+    this.optionId,
+    this.option,
   });
 
-  Scenario copyWith({
-    String? question,
-    List<String>? options,
-  }) =>
-      Scenario(
-        question: question ?? this.question,
-        options: options ?? this.options,
-      );
+  // Decoder: fromJson
+  factory Option.fromJson(Map<String, dynamic> json) {
+    return Option(
+      catId: json['catId'] as int?,
+      questionId: json['questionId'] as int?,
+      optionId: json['optionId'] as int?,
+      option: json['option'] as String?,
+    );
+  }
 
-  factory Scenario.fromJson(Map<String, dynamic> json) => Scenario(
-    question: json["question"],
-    options: json["options"] == null ? [] : List<String>.from(json["options"]!.map((x) => x)),
-  );
+  // Encoder: toJson
+  Map<String, dynamic> toJson() {
+    return {
+      'catId': catId,
+      'questionId': questionId,
+      'optionId': optionId,
+      'option': option,
+    };
+  }
 
-  Map<String, dynamic> toJson() => {
-    "question": question,
-    "options": options == null ? [] : List<dynamic>.from(options!.map((x) => x)),
-  };
+  // CopyWith function
+  Option copyWith({
+    int? catId,
+    int? questionId,
+    int? optionId,
+    String? option,
+  }) {
+    return Option(
+      catId: catId ?? this.catId,
+      questionId: questionId ?? this.questionId,
+      optionId: optionId ?? this.optionId,
+      option: option ?? this.option,
+    );
+  }
 }

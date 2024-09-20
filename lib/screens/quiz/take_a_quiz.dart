@@ -18,8 +18,8 @@ class QuizScreen extends StatefulWidget {
 
 class _QuizScreenState extends State<QuizScreen> {
   int _currentQuestionIndex = 0;
-  List<Datum> _questions = [];
-  List<Datum> _selectedQuestions = [];
+  List<Data> _questions = [];
+  List<Option?> _selectedQuestions = [];
 
   void _onOptionSelected() {
     if (_currentQuestionIndex < _questions.length - 1) {
@@ -78,7 +78,10 @@ class _QuizScreenState extends State<QuizScreen> {
                     child: Column(
                       children: _questions[_currentQuestionIndex].options!.map((option) {
                         return GestureDetector(
-                          onTap: _onOptionSelected,
+                          onTap: (){
+                            addItem(option: option);
+                            _onOptionSelected();
+                          },
                           child: Align(
                             alignment: Alignment.center,
                             child: Container(
@@ -93,7 +96,7 @@ class _QuizScreenState extends State<QuizScreen> {
                               child: Center(
                                 child: Text(
                                   textAlign: TextAlign.center,
-                                  option,
+                                  option.option ?? "",
                                   style: Styles.questionStyle.copyWith(color: MyColors.textColorPurple),
                                 ),
                               ),
@@ -153,12 +156,32 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 
+  void addItem({required Option option}) {
+    Option? existingOption = _selectedQuestions.firstWhere((item) => item?.catId == option.catId &&item?.questionId == option.questionId &&item?.optionId == option.optionId,
+      orElse: () => null, // Cast to Option, assuming no match.
+    );
+    if (existingOption == null) {
+      Option? differentOption = _selectedQuestions.firstWhere((item) =>
+        item?.catId == option.catId && item?.questionId == option.questionId && item?.optionId != option.optionId,
+        orElse: () => null, // Cast to Option for empty case
+      );
+      if (differentOption != null) {
+        var index = _selectedQuestions.indexOf(differentOption);
+        _selectedQuestions[index] = option;
+      } else {
+        _selectedQuestions.add(option);
+      }
+    }
+  }
+
+
+
   double get _progress {
     return (_currentQuestionIndex + 1) / _questions.length;
   }
 
-  List<Datum> getAllQuestions() {
-    List<Datum> allQuestions = [];
+  List<Data> getAllQuestions() {
+    List<Data> allQuestions = [];
     for (var category in Constants.questionsModel.questionsData ?? []) {
       if (category.data != null) {
         allQuestions.addAll(category.data!);

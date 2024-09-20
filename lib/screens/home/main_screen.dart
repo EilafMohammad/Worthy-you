@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:worthy_you/screens/audio_play_screen.dart';
 import 'package:worthy_you/screens/chatbot/chat_bot_intro_screen.dart';
+import 'package:worthy_you/screens/quiz/specific/speech_text_screen.dart';
 import 'package:worthy_you/screens/quiz/take_a_quiz.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
@@ -17,8 +17,8 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   var listMeditationPaths = [
     "Appearance",
-    "Academic Performance",
     "Acceptance",
+    "Academic Performance",
     "Competence"
   ];
 
@@ -107,7 +107,51 @@ class _MainScreenState extends State<MainScreen> {
                               color: MyColors.colorBlack, width: 0.5),
                           borderRadius:
                               BorderRadius.all(Radius.circular(25.0))),
-                      onPressed: () {},
+                      onPressed: () {
+                        var index = listMeditationPaths.indexOf(item);
+                        switch (index) {
+                          case 0:
+                            {
+                              var args = {
+                                "title": Constants.labelAppearance,
+                                "heading": Constants.infoAppearance,
+                                "image": "images/icon_appearance.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                          case 1:
+                            {
+                              var args = {
+                                "title": Constants.labelSocialAcceptance,
+                                "heading": Constants.infoSocialAcceptance,
+                                "image": "images/icon_social_acceptance.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                          case 2:
+                            {
+                              var args = {
+                                "title": Constants.labelAcademicPerformance,
+                                "heading": Constants.infoAcademicPerformance,
+                                "image": "images/icon_academic_performance.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                          case 3:
+                            {
+                              var args = {
+                                "title": Constants.labelCareerCompetence,
+                                "heading": Constants.infoCareerCompetence,
+                                "image": "images/icon_career_competence.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                        }
+                      },
                     ),
                   );
                 }).toList(),
