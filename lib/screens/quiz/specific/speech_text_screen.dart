@@ -1,8 +1,11 @@
-import 'dart:convert';
+import 'dart:io';
 
+import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:worthy_you/extensions/map_extentions.dart';
 import 'package:worthy_you/screens/audioPlay_appearence_screen.dart';
@@ -22,9 +25,14 @@ class SpeechToTextScreen extends StatefulWidget {
 
 class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
   late stt.SpeechToText _speech;
-  bool _isListening = false;
   String _text = ""; // Speech-to-text output
-  bool _isButtonPressed = false;
+  bool _isListening = false;
+  late FlutterSoundRecorder _recorder;
+  bool _isRecording = false;
+  String? _audioPath;
+
+
+
 
   String title = "";
   String heading = "";
@@ -41,6 +49,10 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
       heading = args.getValueOfKey("heading");
       imagePath = args.getValueOfKey("image");
     }
+
+
+    _recorder = FlutterSoundRecorder();
+    _initializeRecorder();
   }
 
   void _startListening() async {
@@ -49,35 +61,36 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
       onError: (val) => print('onError: $val'),
     );
     if (available) {
-      setState(() => _isListening = true);
-      _speech.listen(
-        onResult: (val) => setState(() {
+      _startRecording();
+      _speech.listen(onResult: (val) => setState(() {
           _text = val.recognizedWords.isNotEmpty
               ? val.recognizedWords
-              : "I couldn't catch that, try again."; // Handle empty result
-          print("Recognized Words: $_text"); // Debugging log
+              : ""; // Handle empty result
+          if (kDebugMode) {
+            print("Recognized Words: $_text");
+          } // Debugging log
         }),
       );
     }
   }
 
   void _stopListening() {
-    setState(() {
-      _isListening = false;
-      _isButtonPressed = false;
-    });
+    _text = _speech.lastRecognizedWords;
     _speech.stop();
+    _stopRecording();
   }
 
   Future<void> _sendToChatGPT(String userInput) async {
-    Get.toNamed(LoadingScreen.tag,arguments: userInput)?.then((val){
+    Get.toNamed(LoadingScreen.tag,arguments: {
+      "userInput":userInput,
+      "filePath":_audioPath,
+    })?.then((val){
       if(val!=null){
         if(val is Map && val.containsKey("url")){
           Get.offAndToNamed(AudioPlayerAppearanceScreen.tag,arguments: {
-            "text":userInput,
+            "text": val.getValueOfKey("content"),
             "category":title,
             "data":val});
-
         }else{
           _showError(val);
         }
@@ -197,7 +210,8 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
                 ),
                 child: Text(
                   _text.isEmpty ? "Your text will appear here..." : _text,
-                  style: Styles.textStyle.copyWith(color: _text.isEmpty ? MyColors.textColorSecondary:MyColors.colorBlack),
+                  maxLines: 5,
+                  style: Styles.textStyle.copyWith(fontSize: 12,color: _text.isEmpty ? MyColors.textColorSecondary:MyColors.colorBlack),
                 ),
               ),
             ),
@@ -242,54 +256,98 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
                 ),
                 GestureDetector(
                     onTapDown: (_) {
-                      setState(() => _isButtonPressed = true);
                       _startListening();
                     },
                     onTapUp: (_) {
                       _stopListening();
                     },
-                    child: Image.asset(
-                      "images/icon_mic.png",
-                      width: size.width * 0.2,
-                    )),
-                ElevatedButton(
-                  onPressed: () {
-                    // Send to ChatGPT if the user submits the text
-                    if (_text.isNotEmpty) {
-                      _sendToChatGPT(_text); // Send the text to ChatGPT only after pressing Submit
-                    } else {
-                      _sendToChatGPT(
-                          "I don't like my nose"); // Auto-send "I feel sad" if no input
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xffffffff),
-                    side: BorderSide(
-                      color: const Color(0xff0F1117).withAlpha(30),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                  child: Image.asset(
+                    "images/icon_mic.png",
+                    width: size.width * 0.2,
                   ),
-                  child: const Text(
-                    Constants.labelSubmit,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                ),
+                Opacity(
+                  opacity: _text.isNotEmpty ?1:0.2,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Send to ChatGPT if the user submits the text
+                      if (_text.isNotEmpty) {
+                        _sendToChatGPT(_text); // Send the text to ChatGPT only after pressing Submit
+                      } else {
+                        _sendToChatGPT("Helo I'm fat"); // Auto-send "I feel sad" if no input
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xffffffff),
+                      side: BorderSide(
+                        color: const Color(0xff0F1117).withAlpha(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: const Text(
+                      Constants.labelSubmit,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 15),
             // Space at the bottom for padding
           ],
         ),
       ),
     );
   }
+
+
+
+  Future<void> _initializeRecorder() async {
+    await _recorder.openRecorder();
+  }
+
+
+  void _startRecording() async {
+    Directory tempDir = await getTemporaryDirectory();
+    String path = '${tempDir.path}/speech_audio.aac';
+    _audioPath = path;
+
+    await _recorder.startRecorder(
+      toFile: path,
+      codec: Codec.aacADTS,
+    );
+
+    setState(() {
+      _isRecording = true;
+    });
+  }
+  void _stopRecording() async {
+    await _recorder.stopRecorder();
+    setState(() {
+      _isRecording = false;
+    });
+
+    if (_audioPath != null) {
+      File recordedAudio = File(_audioPath!);
+      print('Recorded audio path: $_audioPath'); // Do what you need with the file
+      // You can return the file here
+    }
+  }
+
+  @override
+  void dispose() {
+    _recorder.closeRecorder();
+    _speech.cancel();
+    super.dispose();
+  }
+
 }

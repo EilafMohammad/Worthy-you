@@ -34,13 +34,10 @@ class HttpServices {
     }
 
     Map<String, String> headers;
-    headers = {
+    headers =  {
       'Content-Type': 'application/json',
-      'accept': 'text/event-stream',
+      'Authorization': 'Bearer $token',
     };
-
-    headers['Authorization'] = '37d3d6868f6b4f89aff34e6e32cb6bc3';
-    headers['X-USER-ID'] = 'pGjYUlPmDIS1kpUuY0OkviBXh8z1';
 
     if (queryParams != null) {
       final uri = Uri.parse(url).replace(queryParameters: queryParams);
@@ -105,6 +102,40 @@ class HttpServices {
     if (kDebugMode) {
       print("Response headers: ${response.headers}");
     }
+  }
+
+
+
+  static Future<http.Response> postMultiPartJson({
+    Map<String, String>? body,
+    Map<String, dynamic>? files,
+    required String url,
+  }) async {
+    if (!(await hasNetwork())) {
+      return http.Response(json.encode(internetMsg), 400);
+    }
+
+    Map<String, String> headers;
+    headers = {
+      'Content-Type': 'application/json',
+      'accept': 'application/json',
+      'Authorization': 'Bearer 37d3d6868f6b4f89aff34e6e32cb6bc3',
+      'X-USER-ID': 'pGjYUlPmDIS1kpUuY0OkviBXh8z1',
+    };
+
+    var request = http.MultipartRequest("POST", Uri.parse(url));
+    if (body != null) {
+      request.fields.addAll(body);
+    }
+    if (files != null) {
+      files.forEach((key, value) async {
+        request.files.add(await http.MultipartFile.fromPath(key, value));
+      });
+    }
+
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    return await http.Response.fromStream(response);
   }
 
 }

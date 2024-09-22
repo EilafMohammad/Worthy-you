@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +7,9 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:worthy_you/extensions/map_extentions.dart';
 import 'package:worthy_you/extensions/response_extentions.dart';
-import 'package:worthy_you/extensions/string_extentions.dart';
 import 'package:worthy_you/services/http_services.dart';
 import 'package:worthy_you/utils/colors.dart';
+import 'package:worthy_you/utils/pref_utils.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -22,7 +23,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    _sendToChatGPT(Get.arguments);
+    if(Get.arguments is Map){
+      var content  = (Get.arguments as Map).getValueOfKey("userInput");
+      var file  = (Get.arguments as Map).getValueOfKey("filePath");
+      _sendToChatGPT(content,file);
+    }
   }
 
   @override
@@ -83,26 +88,25 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  Future<dynamic> _sendToChatGPT(String userInput) async {
+  Future<dynamic> _sendToChatGPT(String userInput, File? file) async {
     final inputText = userInput.isNotEmpty ? userInput : "I feel sad";
+    getTextFromGPT(content: inputText);
+    // Future.delayed(const Duration(seconds: 3),()async{
+    //
+    //   final jsonObject = {
+    //     "id": "AS0KoCS9yPrz2EQIgE",
+    //     "progress": 1,
+    //     "stage": "complete",
+    //     "url": "https://peregrine-results.s3.amazonaws.com/pigeon/AS0KoCS9yPrz2EQIgE_0.mp3",
+    //     "duration": 1.664,
+    //     "size": 35085
+    //   };
+    //
+    //   // Convert the Map to a JSON string
+    //   final jsonString = jsonEncode(jsonObject);
+    //   Get.back(result: jsonDecode(jsonString));
+    // });
 
-    Future.delayed(const Duration(seconds: 3),()async{
-
-      final jsonObject = {
-        "id": "AS0KoCS9yPrz2EQIgE",
-        "progress": 1,
-        "stage": "complete",
-        "url": "https://peregrine-results.s3.amazonaws.com/pigeon/AS0KoCS9yPrz2EQIgE_0.mp3",
-        "duration": 1.664,
-        "size": 35085
-      };
-
-      // Convert the Map to a JSON string
-      final jsonString = jsonEncode(jsonObject);
-      Get.back(result: jsonDecode(jsonString));
-    });
-
-    // getVoices(content: inputText);
     return;
 
     const apiKey = 'sk-KSnHdir8kGGHH6qyB-gl031jYCTnsD4xJHY9BmEB6rT3BlbkFJKmNOdh2xmpnCX60p_grMG_EXkC2N2LyGm3DdfhQXIA'; // Add your API key here
@@ -158,49 +162,119 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
-  Future<dynamic> getVoices({
+  Future<dynamic> getTextFromGPT({
     required String content,
+    String? filePath,
   }) async {
-    var body = {
-      "text": content,
-      "voice":
-          "s3://voice-cloning-zero-shot/d9ff78ba-d016-47f6-b0ef-dd630f59414e/female-cs/manifest.json",
-      "output_format": "mp3",
-      "voice_engine": "PlayHT2.0"
-    };
-    var response = await HttpServices.postStreamJson(url: 'https://api.play.ht/api/v2/tts', body: body);
-    await for (var chunk in response.stream.transform(utf8.decoder)) {
-      if (kDebugMode) {
-        print("Received event: $chunk");
+    try {
+      final body = {
+        "model": "gpt-3.5-turbo",
+        "messages": [
+          {
+            "role": "system",
+            "content": """
+        You are a professional psychology therapist. Your job is to provide users with positive affirmations in an inner voice style. These affirmations should be structured like:
+        - "I’m confident and strong."
+        - "I am worthy and capable."
+        The goal is for users to repeat these affirmations in their own voice.
+        Rules:
+        1. The affirmation should be based on the user's self-image and appearance.
+        2. Provide only one affirmation in response to the user's input.
+        3. If the user asks for anything else, respond with "N/A".
+        Do not say anything other than the affirmation.
+        """
+          },
+          {"role": "user", "content": content}
+        ],
+        "max_tokens": 150
+      };
+      var response = await HttpServices.postJson(
+          url: 'https://api.openai.com/v1/chat/completions',
+          body: body,
+          token: 'sk-KSnHdir8kGGHH6qyB-gl031jYCTnsD4xJHY9BmEB6rT3BlbkFJKmNOdh2xmpnCX60p_grMG_EXkC2N2LyGm3DdfhQXIA');
+      if (await response.isSuccessful()) {
+        final responseBody = json.decode(response.body);
+        final chatGptResponse = responseBody['choices'][0]['message']['content'] ??
+            "No response";
+        getVoices(content: chatGptResponse,filePath: filePath ?? "");
+      } else {
+        Get.back(result: "Failed to generate Effirmations");
       }
-      processEventStream(chunk);
-    }
-    Get.back();
-
-    if (kDebugMode) {
-      print("Response headers: ${response.headers}");
+    } catch (e) {
+      Get.back(result: "Failed to generate Effirmations");
     }
   }
 
-  static void processEventStream(String chunk) {
+  Future<dynamic> getVoices({
+    required String content,
+    required String filePath,
+  }) async {
+    try {
+
+
+      var template = await MyPrefUtils.getString(MyPrefUtils.voiceTemplate);
+      if (template.isNotEmpty) {
+        final body = {
+          "sample_file": filePath,
+          "voice_name": DateTime.now().millisecondsSinceEpoch.toString()
+        };
+        var voiceResponse = await HttpServices.postMultiPartJson(
+            url: 'https://api.play.ht/api/v2/cloned-voices/instant',
+            body: body
+        );
+        if (await voiceResponse.isSuccessful()) {
+          var data = jsonDecode(voiceResponse.body);
+          template = (data as Map).getValueOfKey("id");
+          MyPrefUtils.putString(MyPrefUtils.voiceTemplate,template);
+        }
+      }
+
+
+
+
+      var body = {
+        "text": content,
+        // "voice": "s3://voice-cloning-zero-shot/d9ff78ba-d016-47f6-b0ef-dd630f59414e/female-cs/manifest.json",
+        "voice": template,
+        "output_format": "mp3",
+        "voice_engine": "PlayHT2.0"
+      };
+      var response = await HttpServices.postStreamJson(
+          url: 'https://api.play.ht/api/v2/tts', body: body);
+      await for (var chunk in response.stream.transform(utf8.decoder)) {
+        if (kDebugMode) {
+          print("Received event: $chunk");
+        }
+        processEventStream(content: content, chunk: chunk);
+      }
+
+      if (kDebugMode) {
+        print("Response headers: ${response.headers}");
+      }
+    } catch (e) {
+      Get.back(result: "Failed to generate Effirmations");
+    }
+  }
+
+  static void processEventStream(
+      {required String chunk, required String content}) {
     List<String> events = chunk.split('\n\n');
     for (var event in events) {
       if (event.trim().isNotEmpty) {
         if (kDebugMode) {
           print('Processing event: $event');
         }
-        final jsonMatch = RegExp(r'({.*?})').firstMatch(event);
+        final jsonMatch = RegExp(r'\{.*?"url":".*?"[^}]*\}').firstMatch(event);
         if (jsonMatch != null) {
           final jsonString = jsonMatch.group(0)!;
-          try {
-            final jsonData = jsonDecode(jsonString);
+          var jsonData = jsonDecode(jsonString);
             if (jsonData['stage'] == 'complete' && jsonData['url'] != null) {
-              print("Stage: ${jsonData['stage']}, URL: ${jsonData['url']}");
+              if (kDebugMode) {
+                print("Stage: ${jsonData['stage']}, URL: ${jsonData['url']}");
+              }
+              jsonData["content"] = content;
               Get.back(result: jsonData);
             }
-          } catch (e) {
-            print("Error parsing JSON: $e");
-          }
         }
 
 

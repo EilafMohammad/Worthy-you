@@ -211,6 +211,22 @@ class _QuizScreenState extends State<QuizScreen> {
     }
     return null;
   }
+
+  skipCategory({required Option option}){
+    if(option.questionId == 0 && option.catId == 3){
+      var list = _questions.where((item)=> item.catId == 3 && item.questionId != 0).toList();
+      if(list.isNotEmpty){
+        _questions =  list;
+      }
+    }
+    if(option.questionId == 0 && option.catId == 4){
+      var list = _questions.where((item)=> item.catId == 4 && item.questionId != 0).toList();
+      if(list.isNotEmpty){
+        _questions =  list;
+      }
+    }
+
+  }
 }
 
 

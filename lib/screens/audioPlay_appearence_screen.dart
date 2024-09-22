@@ -47,8 +47,6 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -64,7 +62,7 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
                 size: 30.0,
               )),
           title: Text(
-            "Appearance",
+            title,
             style: Styles.subHeadingStyle,
           ),
           centerTitle: true,
@@ -74,93 +72,96 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
         backgroundColor: MyColors.backgroundColor,
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Image Section
-                  const CircleAvatar(
-                    radius: 110,
-                    backgroundImage: AssetImage(
-                        'images/Group15.png'), // Assuming image path is correct
-                  ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Image Section
+                      const CircleAvatar(
+                        radius: 100,
+                        backgroundImage: AssetImage('images/Group15.png'), // Assuming image path is correct
+                      ),
 
-                  const SizedBox(height: 20),
+                      const SizedBox(height: 10),
 
-                  // Text Response Box
-                  Container(
-                    height: 100,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: const Color(0xffFFFFFF),
-                      border: Border.all(
-                          color: const Color(0xff0F1117).withOpacity(0.2)),
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(
-                          responseText, // Display the GPT response here
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff0F1117),
+                      // Text Response Box
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: const Color(0xffFFFFFF),
+                          border: Border.all(
+                              color: const Color(0xff0F1117).withOpacity(0.2)),
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+                            child: Text(
+                              responseText,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xff0F1117),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
 
-                  const SizedBox(height: 20),
+                      const SizedBox(height: 10),
 
-                  // Background Effects Section
-                  const Text(
-                    "Background Effects",
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey),
-                  ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 10.0,
-                    children: [
-                      _buildEffectButton("Ocean"),
-                      _buildEffectButton("Rain"),
-                      _buildEffectButton("Forest"),
-                      _buildEffectButton("None"),
+                      // Background Effects Section
+                      const Text(
+                        "Background Effects",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey),
+                      ),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 10.0,
+                        children: [
+                          _buildEffectButton("Ocean"),
+                          _buildEffectButton("Rain"),
+                          _buildEffectButton("Forest"),
+                          _buildEffectButton("None"),
+                        ],
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // Narrator Selection Section
+                      const Text(
+                        "Narrator",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey),
+                      ),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 10.0,
+                        children: [
+                          _buildNarratorButton("Female", false),
+                          _buildNarratorButton("Male", true),
+                          // Disabled button
+                          _buildNarratorButton("My Voice", true),
+                          // Disabled button
+                        ],
+                      ),
+
+                      const SizedBox(height: 20),
                     ],
                   ),
-
-                  const SizedBox(height: 20),
-
-                  // Narrator Selection Section
-                  const Text(
-                    "Narrator",
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey),
-                  ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 10.0,
-                    children: [
-                      _buildNarratorButton("Female", false),
-                      _buildNarratorButton("Male", true), // Disabled button
-                      _buildNarratorButton("My Voice", true), // Disabled button
-                    ],
-                  ),
-
-                  const SizedBox(height: 20),
-                ],
+                ),
               ),
             ),
-            Spacer(),
             Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -169,7 +170,7 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 3,
                       blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
                   ],
                 ),
