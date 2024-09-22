@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,10 +33,10 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
     var list = Get.arguments;
     if (list is List<Option?>) {
       _selectedQuestions = list;
-      _appearanceList = list.where((item) => item?.catId == 1).toList();
-      _socialAcceptance = list.where((item) => item?.catId == 2).toList();
-      _academicPerformance = list.where((item) => item?.catId == 3).toList();
-      _careerCompetence = list.where((item) => item?.catId == 4).toList();
+      _appearanceList = list.where((item) => item?.catId == 1 && item?.questionId != 0).toList();
+      _socialAcceptance = list.where((item) => item?.catId == 2 && item?.questionId != 0).toList();
+      _academicPerformance = list.where((item) => item?.catId == 3 && item?.questionId != 0).toList();
+      _careerCompetence = list.where((item) => item?.catId == 4 && item?.questionId != 0).toList();
     }
   }
 
@@ -240,9 +242,8 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
   }
 
   getSum({required List<Option?> list}){
-    // Get all optionId's and sum the last digit of each optionId
     int sum = list
-        .map((item) => item?.optionId ?? 0)        // Extract the optionId, default to 0 if null
+        .map((item) => item?.optionId ?? 0)
         .map((optionId) => optionId % 10)          // Get the last digit of each optionId
         .fold(0, (prev, current) => prev + current); // Sum the last digits
 
@@ -253,6 +254,11 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
   }
 
   getInsecurityPercentage({required List<Option?> list}){
+    var jsonList = list.map((item) => item?.toJson()).toList();
+    jsonEncode(jsonList);
+    if (kDebugMode) {
+      print("Encode------------->${jsonEncode(jsonList)}");
+    }
     var sum = getSum(list: list);
     var insecurityPercentage = (sum - 5)/(20-5);
     if (kDebugMode) {

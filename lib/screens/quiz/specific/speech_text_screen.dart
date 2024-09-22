@@ -71,10 +71,16 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
 
   Future<void> _sendToChatGPT(String userInput) async {
     Get.toNamed(LoadingScreen.tag,arguments: userInput)?.then((val){
-      if(val is String && val.contains("Error")){
-        _showError(val);
-      }else{
-        Get.offAndToNamed(AudioPlayerAppearanceScreen.tag,arguments: val);
+      if(val!=null){
+        if(val is Map && val.containsKey("url")){
+          Get.offAndToNamed(AudioPlayerAppearanceScreen.tag,arguments: {
+            "text":userInput,
+            "category":title,
+            "data":val});
+
+        }else{
+          _showError(val);
+        }
       }
     });
     /*const apiKey = 'sk-KSnHdir8kGGHH6qyB-gl031jYCTnsD4xJHY9BmEB6rT3BlbkFJKmNOdh2xmpnCX60p_grMG_EXkC2N2LyGm3DdfhQXIA'; // Add your API key here
@@ -246,26 +252,6 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
                       "images/icon_mic.png",
                       width: size.width * 0.2,
                     )),
-                // GestureDetector(
-                //   onTapDown: (_) {
-                //     setState(() => _isButtonPressed = true);
-                //     _startListening();
-                //   },
-                //   onTapUp: (_) {
-                //     _stopListening();
-                //   },
-                //   child: CircleAvatar(
-                //     radius: size.width * 0.1,
-                //     backgroundColor: _isButtonPressed
-                //         ? Colors.indigo.withOpacity(0.3)
-                //         : Colors.indigo.withOpacity(0.1),
-                //     child: Icon(
-                //       _isListening ? Icons.mic : Icons.mic_none,
-                //       color: Colors.indigo,
-                //       size: 35,
-                //     ),
-                //   ),
-                // ),
                 ElevatedButton(
                   onPressed: () {
                     // Send to ChatGPT if the user submits the text

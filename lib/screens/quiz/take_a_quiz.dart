@@ -25,7 +25,6 @@ class _QuizScreenState extends State<QuizScreen> {
     if (_currentQuestionIndex < _questions.length - 1) {
       setState(() {
         addItem(option: option);
-        _currentQuestionIndex++;
       });
     } else {
       Get.toNamed(QuizResultsScreen.tag,arguments: _selectedQuestions);
@@ -89,7 +88,11 @@ class _QuizScreenState extends State<QuizScreen> {
                               margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                               decoration: BoxDecoration(
-                                color: MyColors.colorWhite,
+                                color: (isExisting(data: _questions[_currentQuestionIndex])?.optionId == option.optionId)
+                                    && (isExisting(data: _questions[_currentQuestionIndex])?.catId == option.catId)
+                                    && (isExisting(data: _questions[_currentQuestionIndex])?.questionId == option.questionId)
+                                ?MyColors.textColorPurple
+                                :MyColors.colorWhite,
                                 border: Border.all(color: Colors.grey.shade500),
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -97,7 +100,12 @@ class _QuizScreenState extends State<QuizScreen> {
                                 child: Text(
                                   textAlign: TextAlign.center,
                                   option.option ?? "",
-                                  style: Styles.questionStyle.copyWith(color: MyColors.textColorPurple),
+                                  style: Styles.questionStyle.copyWith(color:
+                                  (isExisting(data: _questions[_currentQuestionIndex])?.optionId == option.optionId)
+                                      && (isExisting(data: _questions[_currentQuestionIndex])?.catId == option.catId)
+                                      && (isExisting(data: _questions[_currentQuestionIndex])?.questionId == option.questionId)
+                                      ? MyColors.colorWhite
+                                      :MyColors.textColorPurple),
                                 ),
                               ),
                             ),
@@ -134,17 +142,22 @@ class _QuizScreenState extends State<QuizScreen> {
                     ),
                   ),
                   const Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      if (_currentQuestionIndex < (_questions.length - 1)) {
-                        setState(() {
-                          _currentQuestionIndex++;
-                        });
-                      }
-                    },
-                    child: const Text(
-                      Constants.labelNext,
-                      style: Styles.buttonTextStyle,
+                  Opacity(
+                    opacity: (isExisting(data: _questions[_currentQuestionIndex]) !=null) ?1:0.2,
+                    child: TextButton(
+                      onPressed: () {
+                        if(isExisting(data: _questions[_currentQuestionIndex]) !=null){
+                          if (_currentQuestionIndex < (_questions.length - 1)) {
+                            setState(() {
+                              _currentQuestionIndex++;
+                            });
+                          }
+                        }
+                      },
+                      child: const Text(
+                        Constants.labelNext,
+                        style: Styles.buttonTextStyle,
+                      ),
                     ),
                   ),
                 ],
@@ -188,6 +201,15 @@ class _QuizScreenState extends State<QuizScreen> {
       }
     }
     return allQuestions;
+  }
+
+
+  Option? isExisting({required Data data}){
+    var result =  _selectedQuestions.where((item)=> item?.catId == data.catId && item?.questionId == data.questionId).toList();
+    if(result.isNotEmpty){
+      return result.first;
+    }
+    return null;
   }
 }
 

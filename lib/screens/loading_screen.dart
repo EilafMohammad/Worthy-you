@@ -1,8 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:worthy_you/extensions/map_extentions.dart';
+import 'package:worthy_you/extensions/response_extentions.dart';
+import 'package:worthy_you/extensions/string_extentions.dart';
+import 'package:worthy_you/services/http_services.dart';
 import 'package:worthy_you/utils/colors.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -17,7 +22,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    // _sendToChatGPT(Get.arguments);
+    _sendToChatGPT(Get.arguments);
   }
 
   @override
@@ -78,8 +83,28 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
+  Future<dynamic> _sendToChatGPT(String userInput) async {
+    final inputText = userInput.isNotEmpty ? userInput : "I feel sad";
 
-  Future<void> _sendToChatGPT(String userInput) async {
+    Future.delayed(const Duration(seconds: 3),()async{
+
+      final jsonObject = {
+        "id": "AS0KoCS9yPrz2EQIgE",
+        "progress": 1,
+        "stage": "complete",
+        "url": "https://peregrine-results.s3.amazonaws.com/pigeon/AS0KoCS9yPrz2EQIgE_0.mp3",
+        "duration": 1.664,
+        "size": 35085
+      };
+
+      // Convert the Map to a JSON string
+      final jsonString = jsonEncode(jsonObject);
+      Get.back(result: jsonDecode(jsonString));
+    });
+
+    // getVoices(content: inputText);
+    return;
+
     const apiKey = 'sk-KSnHdir8kGGHH6qyB-gl031jYCTnsD4xJHY9BmEB6rT3BlbkFJKmNOdh2xmpnCX60p_grMG_EXkC2N2LyGm3DdfhQXIA'; // Add your API key here
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
@@ -89,7 +114,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     };
 
     // If user input is empty, replace it with "I feel sad"
-    final inputText = userInput.isNotEmpty ? userInput : "I feel sad";
 
     final body = json.encode({
       "model": "gpt-3.5-turbo",
@@ -134,4 +158,70 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
+  Future<dynamic> getVoices({
+    required String content,
+  }) async {
+    var body = {
+      "text": content,
+      "voice":
+          "s3://voice-cloning-zero-shot/d9ff78ba-d016-47f6-b0ef-dd630f59414e/female-cs/manifest.json",
+      "output_format": "mp3",
+      "voice_engine": "PlayHT2.0"
+    };
+    var response = await HttpServices.postStreamJson(url: 'https://api.play.ht/api/v2/tts', body: body);
+    await for (var chunk in response.stream.transform(utf8.decoder)) {
+      if (kDebugMode) {
+        print("Received event: $chunk");
+      }
+      processEventStream(chunk);
+    }
+    Get.back();
+
+    if (kDebugMode) {
+      print("Response headers: ${response.headers}");
+    }
+  }
+
+  static void processEventStream(String chunk) {
+    List<String> events = chunk.split('\n\n');
+    for (var event in events) {
+      if (event.trim().isNotEmpty) {
+        if (kDebugMode) {
+          print('Processing event: $event');
+        }
+        final jsonMatch = RegExp(r'({.*?})').firstMatch(event);
+        if (jsonMatch != null) {
+          final jsonString = jsonMatch.group(0)!;
+          try {
+            final jsonData = jsonDecode(jsonString);
+            if (jsonData['stage'] == 'complete' && jsonData['url'] != null) {
+              print("Stage: ${jsonData['stage']}, URL: ${jsonData['url']}");
+              Get.back(result: jsonData);
+            }
+          } catch (e) {
+            print("Error parsing JSON: $e");
+          }
+        }
+
+
+        /*final eventData = jsonDecode(event)['data'];
+        if (eventData['stage'] == 'complete' && eventData['url'] != null) {
+          if (kDebugMode) {
+            print("Stage: ${eventData['stage']}, URL: ${eventData['url']}");
+           Get.back(result: {
+             "text":Get.arguments,
+             "result_url":eventData['url']
+           });
+          }
+          break;
+        }
+        else if (eventData['stage'] == 'complete' && eventData['url'] == null) {
+          Get.back(result: {
+            "text":Get.arguments,
+            "result_url":null
+          });
+        }*/
+      }
+    }
+  }
 }
