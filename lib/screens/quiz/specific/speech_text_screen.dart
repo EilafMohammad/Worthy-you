@@ -61,7 +61,7 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
       onError: (val) => print('onError: $val'),
     );
     if (available) {
-      _startRecording();
+      // _startRecording();
       _speech.listen(onResult: (val) => setState(() {
           _text = val.recognizedWords.isNotEmpty
               ? val.recognizedWords
@@ -77,7 +77,7 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
   void _stopListening() {
     _text = _speech.lastRecognizedWords;
     _speech.stop();
-    _stopRecording();
+    // _stopRecording();
   }
 
   Future<void> _sendToChatGPT(String userInput) async {
