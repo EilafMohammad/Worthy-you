@@ -20,7 +20,9 @@ class _ChatBotIntroScreenState extends State<ChatBotIntroScreen> {
   @override
   void initState() {
     super.initState();
-    _checkFirstTime();
+    Future.delayed(Duration.zero,()async{
+      _checkFirstTime();
+    });
   }
 
   // Check if the user has already started a chat before
@@ -28,9 +30,8 @@ class _ChatBotIntroScreenState extends State<ChatBotIntroScreen> {
     final prefs = await SharedPreferences.getInstance();
     bool hasInteracted = prefs.getBool('hasInteractedWithBot') ?? false;
 
-    // If the user has interacted before, go directly to the chat screen
     if (hasInteracted) {
-      Navigator.pushReplacementNamed(context, 'Bot2ChatScreen');
+      Get.offNamed(ChatBotScreen.tag);
     }
   }
 
@@ -45,7 +46,7 @@ class _ChatBotIntroScreenState extends State<ChatBotIntroScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0XFFFAFDFF),
+        backgroundColor: MyColors.backgroundColor,
         body: Column(
           children: [
             Row(
@@ -112,7 +113,7 @@ class _ChatBotIntroScreenState extends State<ChatBotIntroScreen> {
                       const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
                   child: PrimaryButton(
                     title: Constants.labelGetStarted,
-                    backgroundColor: MyColors.btnColorPrimary,
+                    backgroundColor: MyColors.btnColorSecondary,
                     onPressed: _startChat,
                   ),
                 )

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:worthy_you/screens/audio_play_screen.dart';
 import 'package:worthy_you/screens/chatbot/chat_bot_intro_screen.dart';
-import 'package:worthy_you/screens/take_a_quiz.dart';
+import 'package:worthy_you/screens/quiz/specific/speech_text_screen.dart';
+import 'package:worthy_you/screens/quiz/take_a_quiz.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
+
+import '../../utils/pref_utils.dart';
+import '../audio_play_screen.dart';
+import '../profile/ProfileScreen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -15,13 +19,24 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  String name="N/A";
   var listMeditationPaths = [
     "Appearance",
-    "Academic Performance",
     "Acceptance",
+    "Academic Performance",
     "Competence"
   ];
-
+  @override
+  void initState() {
+    _loadUserData();
+    super.initState();
+  }
+  void _loadUserData() async {
+    String? userName = await MyPrefUtils.getString(MyPrefUtils.userName);
+    setState(() {
+      name = userName ?? ''; // Update the state with the retrieved name
+    });
+  }
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -50,16 +65,16 @@ class _MainScreenState extends State<MainScreen> {
                         height: 40.0,
                       ),
                       Text(
-                        Constants.labelWelcomEliaf,
+                        "Welcome ${name}!",
                         style: Styles.subHeadingStyle
                             .copyWith(color: MyColors.colorBlack),
                       ),
                     ],
                   ),
                 ),
-                InkWell(
+                GestureDetector(
                   onTap: () {
-                    Get.toNamed(AudioPlayScreen.tag);
+                    Get.toNamed(ProfileScreen.tag);
                   },
                   child: const CircleAvatar(
                     radius: 30,
@@ -107,7 +122,51 @@ class _MainScreenState extends State<MainScreen> {
                               color: MyColors.colorBlack, width: 0.5),
                           borderRadius:
                               BorderRadius.all(Radius.circular(25.0))),
-                      onPressed: () {},
+                      onPressed: () {
+                        var index = listMeditationPaths.indexOf(item);
+                        switch (index) {
+                          case 0:
+                            {
+                              var args = {
+                                "title": Constants.labelAppearance,
+                                "heading": Constants.infoAppearance,
+                                "image": "images/icon_appearance.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                          case 1:
+                            {
+                              var args = {
+                                "title": Constants.labelSocialAcceptance,
+                                "heading": Constants.infoSocialAcceptance,
+                                "image": "images/icon_social_acceptance.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                          case 2:
+                            {
+                              var args = {
+                                "title": Constants.labelAcademicPerformance,
+                                "heading": Constants.infoAcademicPerformance,
+                                "image": "images/icon_academic_performance.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                          case 3:
+                            {
+                              var args = {
+                                "title": Constants.labelCareerCompetence,
+                                "heading": Constants.infoCareerCompetence,
+                                "image": "images/icon_career_competence.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                        }
+                      },
                     ),
                   );
                 }).toList(),
@@ -141,30 +200,26 @@ class _MainScreenState extends State<MainScreen> {
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              Expanded(
-                                child: Image.asset(
-                                  "images/echo.jpg",
-                                  width: width * 0.4,
-                                  fit: BoxFit.cover,
-                                ),
+                              Image.asset(
+                                "images/echo.jpg",
+                                width: width * 0.4,
+                                fit: BoxFit.cover,
                               ),
-                              Expanded(
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                          colors: [
-                                        Colors.transparent,
-                                        Colors.transparent,
-                                        MyColors.titleBlueColor
-                                      ],
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter)),
-                                  alignment: Alignment.bottomCenter,
-                                  child: Text(
-                                    Constants.labelEcho,
-                                    style: Styles.textStyleBold
-                                        .copyWith(color: MyColors.colorWhite),
-                                  ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(colors: [
+                                      Colors.transparent,
+                                      Colors.transparent,
+                                      MyColors.titleBlueColor
+                                    ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter)),
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  Constants.labelEcho,
+                                  style: Styles.textStyleBold
+                                      .copyWith(color: MyColors.colorWhite),
                                 ),
                               )
                             ],
@@ -178,29 +233,26 @@ class _MainScreenState extends State<MainScreen> {
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            Expanded(
-                              child: Image.asset(
-                                "images/book_a_session.png",
-                                fit: BoxFit.cover,
-                              ),
+                            Image.asset(
+                              "images/book_a_session.png",
+                              fit: BoxFit.cover,
                             ),
-                            Expanded(
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                        colors: [
-                                      Colors.transparent,
-                                      Colors.transparent,
-                                      MyColors.titleBlueColor
-                                    ],
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter)),
-                                alignment: Alignment.bottomCenter,
-                                child: Text(
-                                  Constants.labelBookSession,
-                                  style: Styles.textStyleBold
-                                      .copyWith(color: MyColors.colorWhite),
-                                ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10.0),
+                              decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: [
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                    MyColors.titleBlueColor
+                                  ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter)),
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                Constants.labelBookSession,
+                                style: Styles.textStyleBold
+                                    .copyWith(color: MyColors.colorWhite),
                               ),
                             )
                           ],

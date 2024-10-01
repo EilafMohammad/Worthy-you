@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:worthy_you/screens/home/main_screen.dart';
+import 'package:worthy_you/screens/quiz/affirmation_categories_screen.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 1; // Default to the Main screen
 
   final List<Widget> _screens = [
-    const MyAffirmationsScreen(),
+    AffirmationCategoriesScreen(),
     const MainScreen(), // Main Screen
     const SubscriptionScreen(),
   ];
