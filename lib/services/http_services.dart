@@ -34,7 +34,7 @@ class HttpServices {
     }
 
     Map<String, String> headers;
-    headers =  {
+    headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
@@ -68,8 +68,8 @@ class HttpServices {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'accept': 'text/event-stream',
-      'Authorization': '37d3d6868f6b4f89aff34e6e32cb6bc3',
-      'X-USER-ID': 'pGjYUlPmDIS1kpUuY0OkviBXh8z1',
+      'AUTHORIZATION': 'b274ada64cf546cd81d2d3d1cc06b9d1',
+      'X-USER-ID': 'wPl2qGTQd6MEFzz7oE3Maqc0wvd2',
     };
 
     if (queryParams != null) {
@@ -104,8 +104,6 @@ class HttpServices {
     }
   }
 
-
-
   static Future<http.Response> postMultiPartJson({
     Map<String, String>? body,
     Map<String, dynamic>? files,
@@ -119,8 +117,9 @@ class HttpServices {
     headers = {
       'Content-Type': 'application/json',
       'accept': 'application/json',
-      'Authorization': 'Bearer 37d3d6868f6b4f89aff34e6e32cb6bc3',
-      'X-USER-ID': 'pGjYUlPmDIS1kpUuY0OkviBXh8z1',
+      'AUTHORIZATION': 'b274ada64cf546cd81d2d3d1cc06b9d1',
+      'X-USER-ID': 'wPl2qGTQd6MEFzz7oE3Maqc0wvd2',
+      // 'X-USER-ID': 'pGjYUlPmDIS1kpUuY0OkviBXh8z1',
     };
 
     var request = http.MultipartRequest("POST", Uri.parse(url));
@@ -137,5 +136,4 @@ class HttpServices {
     http.StreamedResponse response = await request.send();
     return await http.Response.fromStream(response);
   }
-
 }

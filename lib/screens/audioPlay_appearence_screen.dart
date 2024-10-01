@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:worthy_you/extensions/map_extentions.dart';
 import 'package:worthy_you/screens/audio_player.dart';
 import 'package:worthy_you/utils/colors.dart';
+import 'package:worthy_you/utils/pref_utils.dart';
 import 'package:worthy_you/utils/styles.dart'; // Import for Timer functionality
 
 class AudioPlayerAppearanceScreen extends StatefulWidget {
@@ -14,10 +15,12 @@ class AudioPlayerAppearanceScreen extends StatefulWidget {
   const AudioPlayerAppearanceScreen({super.key});
 
   @override
-  State<AudioPlayerAppearanceScreen> createState() => _AudioPlayerAppearanceScreenState();
+  State<AudioPlayerAppearanceScreen> createState() =>
+      _AudioPlayerAppearanceScreenState();
 }
 
-class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScreen> {
+class _AudioPlayerAppearanceScreenState
+    extends State<AudioPlayerAppearanceScreen> {
   FlutterTts flutterTts = FlutterTts();
   bool isPlaying = false;
   String responseText = "";
@@ -25,7 +28,8 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
   String title = "";
   Duration currentDuration = Duration.zero;
   Duration totalDuration = Duration.zero;
-  Timer? _timer;  // Timer to simulate progress
+  Timer? _timer; // Timer to simulate progress
+  String? voice = ""; // Timer to simulate progress
 
   @override
   void initState() {
@@ -35,8 +39,16 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
       responseUrl = (Get.arguments as Map).getValueOfKey("url");
       title = (Get.arguments as Map).getValueOfKey("category");
     }
+    getVoice();
   }
 
+  getVoice() {
+    MyPrefUtils.getString(MyPrefUtils.voiceTemplate).then((val) {
+      setState(() {
+        voice = val;
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -68,7 +80,6 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
           centerTitle: true,
           backgroundColor: MyColors.backgroundColor,
         ),
-
         backgroundColor: MyColors.backgroundColor,
         body: Column(
           children: [
@@ -83,7 +94,8 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
                       // Image Section
                       const CircleAvatar(
                         radius: 100,
-                        backgroundImage: AssetImage('images/Group15.png'), // Assuming image path is correct
+                        backgroundImage: AssetImage(
+                            'images/Group15.png'), // Assuming image path is correct
                       ),
 
                       const SizedBox(height: 10),
@@ -99,7 +111,8 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
                         ),
                         child: Center(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 20),
                             child: Text(
                               responseText,
                               textAlign: TextAlign.center,
@@ -148,10 +161,12 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
                       Wrap(
                         spacing: 10.0,
                         children: [
-                          _buildNarratorButton("Female", false),
+                          _buildNarratorButton(
+                              "Female", voice?.isNotEmpty == true),
                           _buildNarratorButton("Male", true),
                           // Disabled button
-                          _buildNarratorButton("My Voice", true),
+                          _buildNarratorButton(
+                              "My Voice", voice?.isEmpty == true),
                           // Disabled button
                         ],
                       ),
@@ -194,7 +209,8 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
       ),
       child: Text(
         label,
-        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        style:
+            const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -202,9 +218,11 @@ class _AudioPlayerAppearanceScreenState extends State<AudioPlayerAppearanceScree
   // Button builder for narrator options with disabled state
   Widget _buildNarratorButton(String label, bool disabled) {
     return ElevatedButton(
-      onPressed: disabled ? null : () {
-        // Handle narrator selection if not disabled
-      },
+      onPressed: disabled
+          ? null
+          : () {
+              // Handle narrator selection if not disabled
+            },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xffFFFFFF),
         side: disabled

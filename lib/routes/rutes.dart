@@ -13,6 +13,10 @@ import 'package:worthy_you/screens/quiz/specific/speech_text_screen.dart';
 import 'package:worthy_you/screens/quiz/take_a_quiz.dart';
 import 'package:worthy_you/screens/quiz/quiz_results_screen.dart';
 
+import '../screens/onbaording/register/SignUpScreen.dart';
+import '../screens/onbaording/signIn/SignInScreen.dart';
+import '../screens/profile/ProfileScreen.dart';
+
 class AppRoutes {
   static rideRoutes() => [
     Generalized.generalized(SplashScreen.tag, () => const SplashScreen(), bindings: []),
@@ -27,6 +31,9 @@ class AppRoutes {
     Generalized.generalized(AudioPlayerAppearanceScreen.tag, () =>  const AudioPlayerAppearanceScreen(), bindings: []),
     Generalized.generalized(SpeechToTextScreen.tag, () =>  const SpeechToTextScreen(), bindings: []),
     Generalized.generalized(LoadingScreen.tag, () =>  const LoadingScreen(), bindings: []),
+    Generalized.generalized(SignUpScreen.tag, () =>  const SignUpScreen(), bindings: []),
+    Generalized.generalized(SignInScreen.tag, () =>  const SignInScreen(), bindings: []),
+    Generalized.generalized(ProfileScreen.tag, () =>  const ProfileScreen(), bindings: []),
   ];
 }
 

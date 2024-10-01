@@ -14,9 +14,36 @@ class Constants{
 
 
   static const String labelSkip="Skip";
+  static const String lblSignUp="SignUp";
+  static const String lblRecording="Recording ...";
+  static const String lblSubmitVocieSample="Submit a voice Sample";
+  static const String lblPressAndHold="press and hold to record,\nthen click submit";
+  static const String lblSubmitYouSelfTalking="Record yourself talking for a minute to clone your voice, you can skip this and find it later at the Settings page.";
+  static const String lblSignUpWithSPace="Sign Up";
+  static const String lblSignInTOAccount="Sign in to your\nAccount";
+  static const String lblEnterYourEmailAndPassword="Enter your email and password to log in ";
+  static const String lblSignUpInfo="Create an account to continue!";
+  static const String lblFullName="Full Name";
+  static const String lblForgotPassword="Forgot Password ?";
+  static const String lblEmail="Email";
+  static const String lblContinueWithGoogle="Continue with Google";
+  static const String lblContinueWithFacebook="Continue with Facebook";
+  static const String lblSetPassword="Set Password";
+  static const String lblAlreadyHaveAccount="Already have an account?";
+  static const String lblSignIn="SignIn";
+  static const String lblLogIn="LogIn";
   static const String labelNext="Next";
   static const String labelBack="Back";
   static const String labelGetStarted="Get Started";
+  static const String labelRegister="Register";
+  static const String labelLogInWithSpace="Log In";
+  static const String labelAccountSecurity="Account Security";
+  static const String labelLogout="Logout";
+  static const String labelLanguage ="Language ";
+  static const String labelDeleteVoiceClone ="Delete voice clone ";
+  static const String labelDelete ="Delete";
+  static const String labelVoiceClone ="Voice clone";
+  static const String labelVoiceCloneInfo ="To clone your voice, Press and hold\nthe mic, and speak  for about one\nminute. Then press submit.";
 
   static const String labelMyAffirmations="My Affirmations";
   static const String labelMain="Main";

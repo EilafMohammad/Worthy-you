@@ -1,12 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:worthy_you/screens/splash_screen.dart';
 
 import 'routes/rutes.dart';
-import 'screens/quiz/quiz_results_screen.dart';
 import 'utils/constants.dart'; // Correct import
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter is initialized
+  await Firebase.initializeApp(); // Initializes Firebase
   runApp(const MyApp());
 }
 

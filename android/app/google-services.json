@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "247634569115",
+    "project_id": "worthyyou-7da46",
+    "storage_bucket": "worthyyou-7da46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247634569115:android:69b02e07ad9e7a7a48233e",
+        "android_client_info": {
+          "package_name": "com.example.worthy_you"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5xJoagtVAfINiQ-SpDT9mVNeUU1aIvZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

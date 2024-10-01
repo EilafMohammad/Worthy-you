@@ -7,6 +7,10 @@ import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
 
+import '../../utils/pref_utils.dart';
+import '../audio_play_screen.dart';
+import '../profile/ProfileScreen.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -15,13 +19,24 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  String name="N/A";
   var listMeditationPaths = [
     "Appearance",
     "Acceptance",
     "Academic Performance",
     "Competence"
   ];
-
+  @override
+  void initState() {
+    _loadUserData();
+    super.initState();
+  }
+  void _loadUserData() async {
+    String? userName = await MyPrefUtils.getString(MyPrefUtils.userName);
+    setState(() {
+      name = userName ?? ''; // Update the state with the retrieved name
+    });
+  }
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -50,7 +65,7 @@ class _MainScreenState extends State<MainScreen> {
                         height: 40.0,
                       ),
                       Text(
-                        Constants.labelWelcomEliaf,
+                        "Welcome ${name}!",
                         style: Styles.subHeadingStyle
                             .copyWith(color: MyColors.colorBlack),
                       ),
@@ -59,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Get.toNamed(AudioPlayScreen.tag);
+                    Get.toNamed(ProfileScreen.tag);
                   },
                   child: const CircleAvatar(
                     radius: 30,

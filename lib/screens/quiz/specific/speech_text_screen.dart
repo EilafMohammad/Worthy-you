@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -24,15 +23,14 @@ class SpeechToTextScreen extends StatefulWidget {
 }
 
 class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
+  final ScrollController _scrollController = ScrollController();
+
   late stt.SpeechToText _speech;
   String _text = ""; // Speech-to-text output
   bool _isListening = false;
   late FlutterSoundRecorder _recorder;
   bool _isRecording = false;
   String? _audioPath;
-
-
-
 
   String title = "";
   String heading = "";
@@ -50,7 +48,6 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
       imagePath = args.getValueOfKey("image");
     }
 
-
     _recorder = FlutterSoundRecorder();
     _initializeRecorder();
   }
@@ -62,13 +59,15 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
     );
     if (available) {
       // _startRecording();
-      _speech.listen(onResult: (val) => setState(() {
+      _speech.listen(
+        onResult: (val) => setState(() {
           _text = val.recognizedWords.isNotEmpty
               ? val.recognizedWords
               : ""; // Handle empty result
           if (kDebugMode) {
             print("Recognized Words: $_text");
           } // Debugging log
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
         }),
       );
     }
@@ -81,17 +80,19 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
   }
 
   Future<void> _sendToChatGPT(String userInput) async {
-    Get.toNamed(LoadingScreen.tag,arguments: {
-      "userInput":userInput,
-      "filePath":_audioPath,
-    })?.then((val){
-      if(val!=null){
-        if(val is Map && val.containsKey("url")){
-          Get.offAndToNamed(AudioPlayerAppearanceScreen.tag,arguments: {
+    Get.toNamed(LoadingScreen.tag, arguments: {
+      "userInput": userInput,
+      "filePath": _audioPath,
+      "title": title,
+    })?.then((val) {
+      if (val != null) {
+        if (val is Map && val.containsKey("url")) {
+          Get.offAndToNamed(AudioPlayerAppearanceScreen.tag, arguments: {
             "text": val.getValueOfKey("content"),
-            "category":title,
-            "data":val});
-        }else{
+            "category": title,
+            "data": val
+          });
+        } else {
           _showError(val);
         }
       }
@@ -150,8 +151,9 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
     }*/
   }
 
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  void _showError(String message,) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message),));
   }
 
   @override
@@ -208,10 +210,17 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
                   borderRadius: BorderRadius.circular(30),
                   border: Border.all(color: const Color(0xff0f11171a)),
                 ),
-                child: Text(
-                  _text.isEmpty ? "Your text will appear here..." : _text,
-                  maxLines: 5,
-                  style: Styles.textStyle.copyWith(fontSize: 12,color: _text.isEmpty ? MyColors.textColorSecondary:MyColors.colorBlack),
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Text(
+                    _text.isEmpty ? "Your text will appear here..." : _text,
+                    maxLines: 5,
+                    style: Styles.textStyle.copyWith(
+                        fontSize: 12,
+                        color: _text.isEmpty
+                            ? MyColors.textColorSecondary
+                            : MyColors.colorBlack),
+                  ),
                 ),
               ),
             ),
@@ -255,26 +264,28 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
                   ),
                 ),
                 GestureDetector(
-                    onTapDown: (_) {
-                      _startListening();
-                    },
-                    onTapUp: (_) {
-                      _stopListening();
-                    },
+                  onTapDown: (_) {
+                    _startListening();
+                  },
+                  onTapUp: (_) {
+                    _stopListening();
+                  },
                   child: Image.asset(
                     "images/icon_mic.png",
                     width: size.width * 0.2,
                   ),
                 ),
                 Opacity(
-                  opacity: _text.isNotEmpty ?1:0.2,
+                  opacity: _text.isNotEmpty ? 1 : 0.2,
                   child: ElevatedButton(
                     onPressed: () {
                       // Send to ChatGPT if the user submits the text
                       if (_text.isNotEmpty) {
-                        _sendToChatGPT(_text); // Send the text to ChatGPT only after pressing Submit
+                        _sendToChatGPT(
+                            _text); // Send the text to ChatGPT only after pressing Submit
                       } else {
-                        _sendToChatGPT("Helo I'm fat"); // Auto-send "I feel sad" if no input
+                        _sendToChatGPT(
+                            "Helo I'm fat"); // Auto-send "I feel sad" if no input
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -309,12 +320,9 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
     );
   }
 
-
-
   Future<void> _initializeRecorder() async {
     await _recorder.openRecorder();
   }
-
 
   void _startRecording() async {
     Directory tempDir = await getTemporaryDirectory();
@@ -330,6 +338,7 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
       _isRecording = true;
     });
   }
+
   void _stopRecording() async {
     await _recorder.stopRecorder();
     setState(() {
@@ -338,7 +347,8 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
 
     if (_audioPath != null) {
       File recordedAudio = File(_audioPath!);
-      print('Recorded audio path: $_audioPath'); // Do what you need with the file
+      print(
+          'Recorded audio path: $_audioPath'); // Do what you need with the file
       // You can return the file here
     }
   }
@@ -347,7 +357,7 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
   void dispose() {
     _recorder.closeRecorder();
     _speech.cancel();
+    _scrollController.dispose();
     super.dispose();
   }
-
 }

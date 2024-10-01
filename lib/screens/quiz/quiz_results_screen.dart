@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,9 @@ import 'package:worthy_you/screens/quiz/affirmation_categories_screen.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
+
+import '../../utils/DimLoadingDialog.dart';
+import '../../utils/pref_utils.dart';
 
 class QuizResultsScreen extends StatefulWidget {
   static const tag = '/quiz_results_screen';
@@ -26,6 +30,11 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
   List<Option?> _socialAcceptance = [];
   List<Option?> _academicPerformance = [];
   List<Option?> _careerCompetence = [];
+  bool careerCompetence = false;
+  bool socialAcceptance = false;
+  bool appearance = false;
+  bool academicPerformance = false;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -33,10 +42,18 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
     var list = Get.arguments;
     if (list is List<Option?>) {
       _selectedQuestions = list;
-      _appearanceList = list.where((item) => item?.catId == 1 && item?.questionId != 0).toList();
-      _socialAcceptance = list.where((item) => item?.catId == 2 && item?.questionId != 0).toList();
-      _academicPerformance = list.where((item) => item?.catId == 3 && item?.questionId != 0).toList();
-      _careerCompetence = list.where((item) => item?.catId == 4 && item?.questionId != 0).toList();
+      _appearanceList = list
+          .where((item) => item?.catId == 1 && item?.questionId != 0)
+          .toList();
+      _socialAcceptance = list
+          .where((item) => item?.catId == 2 && item?.questionId != 0)
+          .toList();
+      _academicPerformance = list
+          .where((item) => item?.catId == 3 && item?.questionId != 0)
+          .toList();
+      _careerCompetence = list
+          .where((item) => item?.catId == 4 && item?.questionId != 0)
+          .toList();
     }
   }
 
@@ -80,9 +97,9 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
                   Row(
                     children: [
                       Expanded(
-                          flex: 4,
-                          child: Text(
-                            Constants.labelCareerCompetence,
+                        flex: 4,
+                        child: Text(
+                          Constants.labelCareerCompetence,
                           textAlign: TextAlign.right,
                           style: Styles.textStyle.copyWith(fontSize: 12.0),
                         ),
@@ -91,10 +108,12 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
                         flex: 6,
                         child: LinearPercentIndicator(
                           lineHeight: 30.0,
-                          percent: getInsecurityPercentage(list: _careerCompetence),
+                          percent: getInsecurityPercentage(
+                              list: _careerCompetence, index: 0),
                           center: Text(
-                            "${getInsecurityPercentage(list: _careerCompetence)*100}%",
-                            style: Styles.textStyle.copyWith(color: MyColors.colorWhite),
+                            "${getInsecurityPercentage(list: _careerCompetence, index: 0) * 100}%",
+                            style: Styles.textStyle
+                                .copyWith(color: MyColors.colorWhite),
                           ),
                           progressColor: MyColors.progressColor,
                           backgroundColor: MyColors.progressBackground,
@@ -117,9 +136,10 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
                         flex: 6,
                         child: LinearPercentIndicator(
                           lineHeight: 30.0,
-                          percent: getInsecurityPercentage(list: _socialAcceptance),
+                          percent: getInsecurityPercentage(
+                              list: _socialAcceptance, index: 1),
                           center: Text(
-                            "${getInsecurityPercentage(list: _socialAcceptance)*100}%",
+                            "${getInsecurityPercentage(list: _socialAcceptance, index: 1) * 100}%",
                             style: Styles.textStyle
                                 .copyWith(color: MyColors.colorWhite),
                           ),
@@ -144,9 +164,10 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
                         flex: 6,
                         child: LinearPercentIndicator(
                           lineHeight: 30.0,
-                          percent: getInsecurityPercentage(list: _appearanceList),
+                          percent: getInsecurityPercentage(
+                              list: _appearanceList, index: 2),
                           center: Text(
-                            "${getInsecurityPercentage(list: _appearanceList)*100}%",
+                            "${getInsecurityPercentage(list: _appearanceList, index: 2) * 100}%",
                             style: Styles.textStyle
                                 .copyWith(color: MyColors.colorWhite),
                           ),
@@ -171,9 +192,10 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
                         flex: 6,
                         child: LinearPercentIndicator(
                           lineHeight: 30.0,
-                          percent: getInsecurityPercentage(list: _academicPerformance),
+                          percent: getInsecurityPercentage(
+                              list: _academicPerformance, index: 3),
                           center: Text(
-                            "${getInsecurityPercentage(list: _academicPerformance)*100}%",
+                            "${getInsecurityPercentage(list: _academicPerformance, index: 3) * 100}%",
                             style: Styles.textStyle
                                 .copyWith(color: MyColors.colorWhite),
                           ),
@@ -220,8 +242,10 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
                   ),
                   IconButton(
                     padding: const EdgeInsets.all(0.0),
-                    onPressed: () {
-                      Get.toNamed(AffirmationCategoriesScreen.tag);
+                    onPressed: () async {
+                      await saveUserResult().then((value) {
+                        Get.toNamed(AffirmationCategoriesScreen.tag);
+                      });
                     },
                     icon: const ImageIcon(
                       AssetImage(
@@ -241,10 +265,10 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
     );
   }
 
-  getSum({required List<Option?> list}){
+  getSum({required List<Option?> list}) {
     int sum = list
         .map((item) => item?.optionId ?? 0)
-        .map((optionId) => optionId % 10)          // Get the last digit of each optionId
+        .map((optionId) => optionId % 10) // Get the last digit of each optionId
         .fold(0, (prev, current) => prev + current); // Sum the last digits
 
     if (kDebugMode) {
@@ -253,21 +277,137 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
     return sum;
   }
 
-  getInsecurityPercentage({required List<Option?> list}){
+  getInsecurityPercentage({required List<Option?> list, required int index}) {
     var jsonList = list.map((item) => item?.toJson()).toList();
     jsonEncode(jsonList);
     if (kDebugMode) {
       print("Encode------------->${jsonEncode(jsonList)}");
     }
     var sum = getSum(list: list);
-    var insecurityPercentage = (sum - 5)/(20-5);
+    var insecurityPercentage = (sum - 5) / (20 - 5);
     if (kDebugMode) {
       print("Sum of last digits--------->: $sum");
     }
 
-    if(insecurityPercentage>1){
+    if (insecurityPercentage > 1) {
       insecurityPercentage = 1.0;
     }
-    return double.parse(insecurityPercentage.toStringAsFixed(2));
+    switch (index) {
+      case 0:
+        {
+          if (insecurityPercentage is num) {
+            if (insecurityPercentage > 0) {
+              setState(() {
+                careerCompetence = true;
+              });
+            } else {
+              setState(() {
+                careerCompetence = false;
+              });
+            }
+          } else {
+            setState(() {
+              careerCompetence = false;
+            });
+          }
+        }
+      case 1:
+        {
+          if (insecurityPercentage is num) {
+            if (insecurityPercentage > 0) {
+              setState(() {
+                socialAcceptance = true;
+              });
+            } else {
+              setState(() {
+                socialAcceptance = false;
+              });
+            }
+          } else {
+            setState(() {
+              socialAcceptance = false;
+            });
+          }
+        }
+      case 2:
+        {
+          if (insecurityPercentage is num) {
+            if (insecurityPercentage > 0) {
+              setState(() {
+                appearance = true;
+              });
+            } else {
+              setState(() {
+                appearance = false;
+              });
+            }
+          } else {
+            setState(() {
+              appearance = false;
+            });
+          }
+        }
+      case 3:
+        {
+          if (insecurityPercentage is num) {
+            if (insecurityPercentage > 0) {
+              setState(() {
+                academicPerformance = true;
+              });
+            } else {
+              setState(() {
+                academicPerformance = false;
+              });
+            }
+          } else {
+            setState(() {
+              academicPerformance = false;
+            });
+          }
+        }
+    }
+
+    if (insecurityPercentage is num) {
+      return (insecurityPercentage > 0)
+          ? double.parse(insecurityPercentage.toStringAsFixed(2))
+          : 0.0;
+    } else {
+      return insecurityPercentage.toStringAsFixed(2);
+    }
+  }
+
+  Future<void> saveUserResult() async {
+    var dialog = DimLoadingDialog(context,
+        blur: 3,
+        dismissable: false,
+        backgroundColor: const Color(0x30000000),
+        animationDuration: const Duration(milliseconds: 100));
+    dialog.show();
+    String userId = await MyPrefUtils.getString(MyPrefUtils.userId);
+    try {
+      DocumentReference userRef = _firestore.collection('users').doc(userId);
+
+      await userRef
+          .collection('records')
+          .doc("Appearance")
+          .update({'quiz_value': appearance});
+      await userRef
+          .collection('records')
+          .doc("Academic Performance")
+          .update({'quiz_value': academicPerformance});
+      await userRef
+          .collection('records')
+          .doc("Career Competence")
+          .update({'quiz_value': careerCompetence});
+      await userRef
+          .collection('records')
+          .doc("Social Acceptance")
+          .update({'quiz_value': socialAcceptance});
+      dialog.show();
+      print('Data saved successfully:');
+    } catch (e) {
+      dialog.show();
+      print('Error saving data: $e');
+    }
   }
 }

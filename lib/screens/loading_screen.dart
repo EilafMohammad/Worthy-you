@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,7 @@ import 'package:worthy_you/utils/pref_utils.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
+
   static const tag = "/loading_screen";
 
   @override
@@ -20,13 +22,16 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String? title;
   @override
   void initState() {
     super.initState();
-    if(Get.arguments is Map){
-      var content  = (Get.arguments as Map).getValueOfKey("userInput");
-      var file  = (Get.arguments as Map).getValueOfKey("filePath");
-      _sendToChatGPT(content,file);
+    if (Get.arguments is Map) {
+      var content = (Get.arguments as Map).getValueOfKey("userInput");
+       title = (Get.arguments as Map).getValueOfKey("title");
+      var file = (Get.arguments as Map).getValueOfKey("filePath");
+      _sendToChatGPT(content, file);
     }
   }
 
@@ -109,7 +114,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     return;
 
-    const apiKey = 'sk-KSnHdir8kGGHH6qyB-gl031jYCTnsD4xJHY9BmEB6rT3BlbkFJKmNOdh2xmpnCX60p_grMG_EXkC2N2LyGm3DdfhQXIA'; // Add your API key here
+    const apiKey =
+        'sk-KSnHdir8kGGHH6qyB-gl031jYCTnsD4xJHY9BmEB6rT3BlbkFJKmNOdh2xmpnCX60p_grMG_EXkC2N2LyGm3DdfhQXIA'; // Add your API key here
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     final headers = {
@@ -136,22 +142,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
         Do not say anything other than the affirmation.
         """
         },
-        {
-          "role": "user",
-          "content": inputText
-        }
+        {"role": "user", "content": inputText}
       ],
       "max_tokens": 150
     });
 
-
-
     try {
-      final response = await http.post(Uri.parse(apiUrl), headers: headers, body: body);
+      final response =
+          await http.post(Uri.parse(apiUrl), headers: headers, body: body);
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        final chatGptResponse = responseBody['choices'][0]['message']['content'] ?? "No response";
+        final chatGptResponse =
+            responseBody['choices'][0]['message']['content'] ?? "No response";
 
         Get.back(result: chatGptResponse);
       } else {
@@ -167,6 +170,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     String? filePath,
   }) async {
     try {
+
+      // 2. Provide only one affirmation in response to the user's input.
+      // 3. If the user asks for anything else, respond with "N/A".
       final body = {
         "model": "gpt-3.5-turbo",
         "messages": [
@@ -179,8 +185,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
         The goal is for users to repeat these affirmations in their own voice.
         Rules:
         1. The affirmation should be based on the user's self-image and appearance.
-        2. Provide only one affirmation in response to the user's input.
-        3. If the user asks for anything else, respond with "N/A".
         Do not say anything other than the affirmation.
         """
           },
@@ -191,12 +195,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
       var response = await HttpServices.postJson(
           url: 'https://api.openai.com/v1/chat/completions',
           body: body,
-          token: 'sk-KSnHdir8kGGHH6qyB-gl031jYCTnsD4xJHY9BmEB6rT3BlbkFJKmNOdh2xmpnCX60p_grMG_EXkC2N2LyGm3DdfhQXIA');
+          token:
+              'sk-KSnHdir8kGGHH6qyB-gl031jYCTnsD4xJHY9BmEB6rT3BlbkFJKmNOdh2xmpnCX60p_grMG_EXkC2N2LyGm3DdfhQXIA');
       if (await response.isSuccessful()) {
         final responseBody = json.decode(response.body);
-        final chatGptResponse = responseBody['choices'][0]['message']['content'] ??
-            "No response";
-        getVoices(content: chatGptResponse,filePath: filePath ?? "");
+        final chatGptResponse =
+            responseBody['choices'][0]['message']['content'] ?? "No response";
+        getVoices(
+          content: chatGptResponse,
+        );
       } else {
         Get.back(result: "Failed to generate Effirmations");
       }
@@ -207,38 +214,20 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<dynamic> getVoices({
     required String content,
-    required String filePath,
   }) async {
     try {
-
-
       var template = await MyPrefUtils.getString(MyPrefUtils.voiceTemplate);
-      if (template.isNotEmpty) {
-        final body = {
-          "sample_file": filePath,
-          "voice_name": DateTime.now().millisecondsSinceEpoch.toString()
-        };
-        var voiceResponse = await HttpServices.postMultiPartJson(
-            url: 'https://api.play.ht/api/v2/cloned-voices/instant',
-            body: body
-        );
-        if (await voiceResponse.isSuccessful()) {
-          var data = jsonDecode(voiceResponse.body);
-          template = (data as Map).getValueOfKey("id");
-          MyPrefUtils.putString(MyPrefUtils.voiceTemplate,template);
-        }
-      }
-
-
-
-
       var body = {
         "text": content,
         // "voice": "s3://voice-cloning-zero-shot/d9ff78ba-d016-47f6-b0ef-dd630f59414e/female-cs/manifest.json",
-        "voice": template,
+        "voice": (template.isNotEmpty)
+            ? template
+            : "s3://voice-cloning-zero-shot/d9ff78ba-d016-47f6-b0ef-dd630f59414e/female-cs/manifest.json",
         "output_format": "mp3",
         "voice_engine": "PlayHT2.0"
       };
+
+      print("Template--------------->$template");
       var response = await HttpServices.postStreamJson(
           url: 'https://api.play.ht/api/v2/tts', body: body);
       await for (var chunk in response.stream.transform(utf8.decoder)) {
@@ -256,8 +245,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
-  static void processEventStream(
-      {required String chunk, required String content}) {
+   Future<void> processEventStream(
+      {required String chunk, required String content}) async {
     List<String> events = chunk.split('\n\n');
     for (var event in events) {
       if (event.trim().isNotEmpty) {
@@ -268,15 +257,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (jsonMatch != null) {
           final jsonString = jsonMatch.group(0)!;
           var jsonData = jsonDecode(jsonString);
-            if (jsonData['stage'] == 'complete' && jsonData['url'] != null) {
-              if (kDebugMode) {
-                print("Stage: ${jsonData['stage']}, URL: ${jsonData['url']}");
-              }
-              jsonData["content"] = content;
-              Get.back(result: jsonData);
+          if (jsonData['stage'] == 'complete' && jsonData['url'] != null) {
+            if (kDebugMode) {
+              print("Stage: ${jsonData['stage']}, URL: ${jsonData['url']}");
             }
+            jsonData["content"] = content;
+            if (content != "N/A") {
+             await saveUserVoiceAndText(jsonString,content);
+            }
+            Get.back(result: jsonData);
+          }
         }
-
 
         /*final eventData = jsonDecode(event)['data'];
         if (eventData['stage'] == 'complete' && eventData['url'] != null) {
@@ -296,6 +287,26 @@ class _LoadingScreenState extends State<LoadingScreen> {
           });
         }*/
       }
+    }
+  }
+
+  Future<void> saveUserVoiceAndText(String data,String content) async {
+    String userId= await MyPrefUtils.getString(MyPrefUtils.userId);
+    try {
+      // Create a reference to the user's document
+      DocumentReference userRef = _firestore.collection('users').doc(userId);
+
+      // Create the data to save
+      Map<String, String> dataToSave = {
+        'response_data': data,
+        'text': content,
+      };
+
+      await userRef.collection('records').doc(title).set(dataToSave);
+
+      print('Data saved successfully: $dataToSave');
+    } catch (e) {
+      print('Error saving data: $e');
     }
   }
 }

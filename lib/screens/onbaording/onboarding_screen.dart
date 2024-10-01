@@ -5,11 +5,14 @@ import 'package:get/get.dart';
 import 'package:worthy_you/screens/home/home_screen.dart';
 import 'package:worthy_you/screens/onbaording/first_onboard.dart';
 import 'package:worthy_you/screens/onbaording/second_onboard.dart';
+import 'package:worthy_you/screens/onbaording/fourth_onboard.dart';
 import 'package:worthy_you/screens/onbaording/third_onboard.dart';
 import 'package:worthy_you/screens/widget/btn_primary.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
+
+import '../../utils/pref_utils.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -37,7 +40,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _nextPage() {
-    if (_currentPage < 2) {
+    if (_currentPage < 3) {
       _pageController.animateToPage(
         _currentPage + 1,
         duration: const Duration(milliseconds: 300),
@@ -79,10 +82,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: PageView(
               controller: _pageController,
               onPageChanged: _onPageChanged,
-              children: const [
-                FirstOnboard(),  // Ensure these widgets are defined and imported correctly
-                SecondOnboard(),
-                ThirdOnboard(),
+              children: [
+                const FirstOnboard(),  // Ensure these widgets are defined and imported correctly
+                const SecondOnboard(),
+                const ThirdOnboard(),
+                const FourthOnboard(),
               ],
             ),
           ),
@@ -90,7 +94,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) {
+              children: List.generate(4, (index) {
                 return Container(
                   width: 12,
                   height: 12,
@@ -105,14 +109,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: (_currentPage < 2) ? 20.0 : 50.0),
-            child: (_currentPage < 2)
+                horizontal: (_currentPage < 3) ? 20.0 : 50.0),
+            child: (_currentPage < 3)
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           Get.toNamed(HomeScreen.tag);
+                          await MyPrefUtils.putBool(MyPrefUtils.isSliderSeen,true);
                         },
                         child: const Text(
                           Constants.labelSkip,
@@ -121,11 +126,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       const Spacer(),
                       TextButton(
-                        onPressed: () {
-                          if (_currentPage < 2) {
+                        onPressed: () async {
+                          if (_currentPage < 3) {
                             _nextPage();
                           } else {
                             Get.toNamed(HomeScreen.tag);
+                            await MyPrefUtils.putBool(MyPrefUtils.isSliderSeen,true);
                           }
                         },
                         child: const Text(
@@ -138,8 +144,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 : PrimaryButton(
                     title: Constants.labelGetStarted,
                     backgroundColor: MyColors.btnColorPrimary,
-                    onPressed: () {
+                    onPressed: () async {
                       Get.toNamed(HomeScreen.tag);
+                      await MyPrefUtils.putBool(MyPrefUtils.isSliderSeen,true);
                     },
                   ),
           ),

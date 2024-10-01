@@ -27,7 +27,7 @@ class _QuizScreenState extends State<QuizScreen> {
         addItem(option: option);
       });
     } else {
-      Get.toNamed(QuizResultsScreen.tag,arguments: _selectedQuestions);
+      Get.offAndToNamed(QuizResultsScreen.tag,arguments: _selectedQuestions);
     }
   }
 

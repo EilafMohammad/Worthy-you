@@ -1,13 +1,36 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:worthy_you/extensions/map_extentions.dart';
 import 'package:worthy_you/screens/audioPlay_appearence_screen.dart';
 import 'package:worthy_you/screens/quiz/specific/speech_text_screen.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
+import 'package:worthy_you/utils/pref_utils.dart';
 import 'package:worthy_you/utils/styles.dart';
 
-class AffirmationCategoriesScreen extends StatelessWidget {
+import '../../utils/DimLoadingDialog.dart';
+
+class AffirmationCategoriesScreen extends StatefulWidget {
   static const tag = '/affirmation_categories_screen';
+
+  AffirmationCategoriesScreen({super.key});
+
+  @override
+  State<AffirmationCategoriesScreen> createState() =>
+      _AffirmationCategoriesScreenState();
+}
+
+class _AffirmationCategoriesScreenState
+    extends State<AffirmationCategoriesScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  String responseText = "N/A";
+
+  bool isFromResult = isFromResultScreen();
+  List<Map<String, dynamic>> recordsList = [];
 
   // List of image assets
   final List<String> imagePaths = [
@@ -17,7 +40,15 @@ class AffirmationCategoriesScreen extends StatelessWidget {
     'images/img.png',
   ];
 
-   AffirmationCategoriesScreen({super.key});
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      if (mounted) {
+        getUserRecords(context);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,66 +111,145 @@ class AffirmationCategoriesScreen extends StatelessWidget {
                 itemCount: imagePaths.length,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: (){
-                      // Get.toNamed(AudioPlayerAppearanceScreen.tag);
-                      switch(index){
-                        case 0:{
-                          var args  = {
-                            "title":Constants.labelAppearance,
-                            "heading":Constants.infoAppearance,
-                            "image":"images/icon_appearance.png"
-                          };
-                          Get.toNamed(SpeechToTextScreen.tag,arguments: args);
+                      onTap: () {
+                        // Get.toNamed(AudioPlayerAppearanceScreen.tag);
+                        switch (index) {
+                          case 0:
+                            {
+                              var args = {
+                                "title": Constants.labelAppearance,
+                                "heading": Constants.infoAppearance,
+                                "image": "images/icon_appearance.png"
+                              };
+                              // Get.toNamed(SpeechToTextScreen.tag,
+                              //     arguments: args);
 
+                              responseText = "";
+                              getUserVoice(Constants.labelAppearance, context)
+                                  .then((val) {
+                                if (responseText.isNotEmpty) {
+                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
+                                      arguments: {
+                                        "text": responseText,
+                                        "category": Constants.labelAppearance,
+                                        "data": jsonDecode(val ?? "")
+                                      });
+                                } else {
+                                  Get.toNamed(SpeechToTextScreen.tag,
+                                      arguments: args);
+                                }
+                              });
+                            }
+                          case 1:
+                            {
+                              var args = {
+                                "title": Constants.labelSocialAcceptance,
+                                "heading": Constants.infoSocialAcceptance,
+                                "image": "images/icon_social_acceptance.png"
+                              };
+                              // Get.toNamed(SpeechToTextScreen.tag,
+                              //     arguments: args);
+
+                              responseText = "";
+                              getUserVoice(
+                                      Constants.labelSocialAcceptance, context)
+                                  .then((val) {
+                                if (responseText.isNotEmpty) {
+                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
+                                      arguments: {
+                                        "text": responseText,
+                                        "category":
+                                            Constants.labelSocialAcceptance,
+                                        "data": jsonDecode(val ?? "")
+                                      });
+                                } else {
+                                  Get.toNamed(SpeechToTextScreen.tag,
+                                      arguments: args);
+                                }
+                              });
+                            }
+                          case 2:
+                            {
+                              var args = {
+                                "title": Constants.labelAcademicPerformance,
+                                "heading": Constants.infoAcademicPerformance,
+                                "image": "images/icon_academic_performance.png"
+                              };
+                              // Get.toNamed(SpeechToTextScreen.tag,
+                              //     arguments: args);
+
+                              responseText = "";
+                              getUserVoice(Constants.labelAcademicPerformance,
+                                      context)
+                                  .then((val) {
+                                if (responseText.isNotEmpty) {
+                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
+                                      arguments: {
+                                        "text": responseText,
+                                        "category":
+                                            Constants.labelAcademicPerformance,
+                                        "data": jsonDecode(val ?? "")
+                                      });
+                                } else {
+                                  Get.toNamed(SpeechToTextScreen.tag,
+                                      arguments: args);
+                                }
+                              });
+                            }
+                          case 3:
+                            {
+                              var args = {
+                                "title": Constants.labelCareerCompetence,
+                                "heading": Constants.infoCareerCompetence,
+                                "image": "images/icon_career_competence.png"
+                              };
+                              // Get.toNamed(SpeechToTextScreen.tag,
+                              //     arguments: args);
+
+                              responseText = "";
+                              getUserVoice(
+                                      Constants.labelCareerCompetence, context)
+                                  .then((val) {
+                                if (responseText.isNotEmpty) {
+                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
+                                      arguments: {
+                                        "text": responseText,
+                                        "category":
+                                            Constants.labelCareerCompetence,
+                                        "data": jsonDecode(val ?? "")
+                                      });
+                                } else {
+                                  Get.toNamed(SpeechToTextScreen.tag,
+                                      arguments: args);
+                                }
+                              });
+                            }
                         }
-                        case 1:{
-                          var args  = {
-                            "title":Constants.labelSocialAcceptance,
-                            "heading":Constants.infoSocialAcceptance,
-                            "image":"images/icon_social_acceptance.png"
-                          };
-                          Get.toNamed(SpeechToTextScreen.tag,arguments: args);
-                        }
-                        case 2:{
-                          var args  = {
-                            "title":Constants.labelAcademicPerformance,
-                            "heading":Constants.infoAcademicPerformance,
-                            "image":"images/icon_academic_performance.png"
-                          };
-                          Get.toNamed(SpeechToTextScreen.tag,arguments: args);
-                        }
-                        case 3:{
-                          var args  = {
-                            "title":Constants.labelCareerCompetence,
-                            "heading":Constants.infoCareerCompetence,
-                            "image":"images/icon_career_competence.png"
-                          };
-                          Get.toNamed(SpeechToTextScreen.tag,arguments: args);
-                        }
-                      }
-                    },
-                    child: Container(
-                      height: 150,
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(5),
-                      padding: const EdgeInsets.all(6.0),
-                      decoration: BoxDecoration(
-                       // color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        image: DecorationImage(
-                          image: AssetImage(imagePaths[index]), // Use the image path from the list
-                          fit: BoxFit.cover,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 2,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                      },
+                      child: (showIndex(recordsList,index))
+                          ? Container(
+                              height: 150,
+                              width: double.infinity,
+                              margin: const EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(6.0),
+                              decoration: BoxDecoration(
+                                // color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                image: DecorationImage(
+                                  image: AssetImage(imagePaths[index]),
+                                  // Use the image path from the list
+                                  fit: BoxFit.cover,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 2,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container());
                 },
               ),
             ),
@@ -147,6 +257,104 @@ class AffirmationCategoriesScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool showIndex(List<Map<String, dynamic>> recordsList, int index) {
+    if (recordsList.isEmpty) return false;
+
+    var record = recordsList[index];
+    var quizValue = record['quiz_value'];
+    var responseData = record['response_data'];
+
+    // Check conditions
+    return (quizValue != null && quizValue != false) ;
+  }
+
+  Future<String?> getUserVoice(
+      String competenceId, BuildContext context) async {
+    var dialog = DimLoadingDialog(context,
+        blur: 3,
+        dismissable: false,
+        backgroundColor: const Color(0x30000000),
+        animationDuration: const Duration(milliseconds: 100));
+    dialog.show();
+    String userId = await MyPrefUtils.getString(MyPrefUtils.userId);
+    try {
+      DocumentReference userRef = _firestore.collection('users').doc(userId);
+      DocumentSnapshot snapshot =
+          await userRef.collection('records').doc(competenceId).get();
+      dialog.dismiss();
+      if (snapshot.exists) {
+        Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+
+        String? dataString = data?['response_data'] as String?;
+        responseText = (data?['text'] as String?) ?? "";
+        return dataString;
+      } else {
+        print('Document does not exist');
+        return null;
+      }
+    } catch (e) {
+      dialog.dismiss();
+      print('Error retrieving voice: $e');
+      return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getUserRecords(
+      BuildContext context) async {
+    var dialog = DimLoadingDialog(context,
+        blur: 3,
+        dismissable: false,
+        backgroundColor: const Color(0x30000000),
+        animationDuration: const Duration(milliseconds: 100));
+    dialog.show();
+    String userId = await MyPrefUtils.getString(MyPrefUtils.userId);
+    try {
+      // Fetch records from the user's document
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(userId).get();
+
+      if (userDoc.exists) {
+        // Assuming records are stored in a sub-collection called 'records'
+        QuerySnapshot recordsSnapshot =
+            await userDoc.reference.collection('records').get();
+
+        // Convert the QuerySnapshot to a list of maps
+        List<Map<String, dynamic>> records = recordsSnapshot.docs.map((doc) {
+          return {
+            'id': doc.id, // Include document ID if needed
+            ...doc.data() as Map<String, dynamic>, // Add document data
+          };
+        }).toList();
+        dialog.dismiss();
+        setState(() {
+          recordsList = records;
+        });
+
+        return records;
+      } else {
+        dialog.dismiss();
+        print('User not found');
+        return []; // Return an empty list if the user does not exist
+      }
+    } catch (e) {
+      dialog.dismiss();
+      print('Error fetching user records: $e');
+      return []; // Return an empty list in case of error
+    }
+  }
+}
+
+isFromResultScreen<bool>() {
+  if (Get.arguments is String) {
+    if (Get.arguments == "isFromResult") {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
   }
 }
 
@@ -175,4 +383,6 @@ class DashedLinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+
+
 }

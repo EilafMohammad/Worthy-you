@@ -20,6 +20,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget>
   Duration _duration = const Duration(minutes: 1, seconds: 30);
   Duration _position = Duration.zero;
   bool isPlaying = false;
+  bool isRecording=false;
 
   @override
   void initState() {
