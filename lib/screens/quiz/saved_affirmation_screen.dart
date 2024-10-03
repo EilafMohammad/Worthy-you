@@ -12,18 +12,17 @@ import 'package:worthy_you/utils/styles.dart';
 
 import '../../utils/DimLoadingDialog.dart';
 
-class AffirmationCategoriesScreen extends StatefulWidget {
-  static const tag = '/affirmation_categories_screen';
-
-  AffirmationCategoriesScreen({super.key});
+class SavedAffirmationScreen extends StatefulWidget {
+  static const tag = '/saved_affirmation_screen';
+  const SavedAffirmationScreen({super.key});
 
   @override
-  State<AffirmationCategoriesScreen> createState() =>
-      _AffirmationCategoriesScreenState();
+  State<SavedAffirmationScreen> createState() =>
+      _SavedAffirmationScreenState();
 }
 
-class _AffirmationCategoriesScreenState
-    extends State<AffirmationCategoriesScreen> {
+class _SavedAffirmationScreenState
+    extends State<SavedAffirmationScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String responseText = "N/A";
@@ -123,7 +122,21 @@ class _AffirmationCategoriesScreenState
                 itemBuilder: (context, index) {
                   return InkWell(
                       onTap: () {
-                        // Get.toNamed(AudioPlayerAppearanceScreen.tag);
+                        if (recordsList.where((item)=> (item["id"] == imagePaths[index]['id'])).isNotEmpty) {
+                          var quizValue = recordsList.firstWhere((item) => item["id"] == imagePaths[index]['id']);
+
+
+                          Get.toNamed(AudioPlayerAppearanceScreen.tag,
+                              arguments: {
+                                "text": quizValue["text"],
+                                "category": Constants.labelCareerCompetence,
+                                "data": jsonDecode(quizValue["response_data"])
+                              });
+                        }
+
+
+
+                        /*// Get.toNamed(AudioPlayerAppearanceScreen.tag);
                         switch (index) {
                           case 0:
                             {
@@ -218,8 +231,7 @@ class _AffirmationCategoriesScreenState
                               //     arguments: args);
 
                               responseText = "";
-                              getUserVoice(
-                                      Constants.labelCareerCompetence, context)
+                              getUserVoice(Constants.labelCareerCompetence, context)
                                   .then((val) {
                                 if (responseText.isNotEmpty) {
                                   Get.toNamed(AudioPlayerAppearanceScreen.tag,
@@ -234,7 +246,7 @@ class _AffirmationCategoriesScreenState
                                 }
                               });
                             }
-                        }
+                        }*/
                       },
                       child: (showIndex(recordsList,index))
                           ? Container(
@@ -273,7 +285,7 @@ class _AffirmationCategoriesScreenState
     if (recordsList.isEmpty) return false;
     if (recordsList.where((item)=> (item["id"] == imagePaths[index]['id'])).isNotEmpty) {
       var quizValue = recordsList.firstWhere((item) => item["id"] == imagePaths[index]['id']);
-      return quizValue["quiz_value"];
+      return quizValue["response_data"]!=null;
     }
     return false;
   }

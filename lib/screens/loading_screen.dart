@@ -302,11 +302,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
         'text': content,
       };
 
-      await userRef.collection('records').doc(title).set(dataToSave);
+      await userRef
+          .collection('records')
+          .doc(title)
+          .set(dataToSave, SetOptions(merge: true));
 
-      print('Data saved successfully: $dataToSave');
+      if (kDebugMode) {
+        print('Data saved successfully: $dataToSave');
+      }
     } catch (e) {
-      print('Error saving data: $e');
+      if (kDebugMode) {
+        print('Error saving data: $e');
+      }
     }
   }
 }

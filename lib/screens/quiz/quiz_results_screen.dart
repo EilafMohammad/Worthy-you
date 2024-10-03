@@ -112,8 +112,7 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
                               list: _careerCompetence, index: 0),
                           center: Text(
                             "${getInsecurityPercentage(list: _careerCompetence, index: 0) * 100}%",
-                            style: Styles.textStyle
-                                .copyWith(color: MyColors.colorWhite),
+                            style: Styles.textStyle.copyWith(color: MyColors.colorWhite),
                           ),
                           progressColor: MyColors.progressColor,
                           backgroundColor: MyColors.progressBackground,
@@ -297,72 +296,48 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
         {
           if (insecurityPercentage is num) {
             if (insecurityPercentage > 0) {
-              setState(() {
                 careerCompetence = true;
-              });
             } else {
-              setState(() {
                 careerCompetence = false;
-              });
             }
           } else {
-            setState(() {
               careerCompetence = false;
-            });
           }
         }
       case 1:
         {
           if (insecurityPercentage is num) {
             if (insecurityPercentage > 0) {
-              setState(() {
                 socialAcceptance = true;
-              });
             } else {
-              setState(() {
                 socialAcceptance = false;
-              });
             }
           } else {
-            setState(() {
               socialAcceptance = false;
-            });
           }
         }
       case 2:
         {
           if (insecurityPercentage is num) {
             if (insecurityPercentage > 0) {
-              setState(() {
                 appearance = true;
-              });
             } else {
-              setState(() {
                 appearance = false;
-              });
             }
           } else {
-            setState(() {
               appearance = false;
-            });
           }
         }
       case 3:
         {
           if (insecurityPercentage is num) {
             if (insecurityPercentage > 0) {
-              setState(() {
                 academicPerformance = true;
-              });
             } else {
-              setState(() {
                 academicPerformance = false;
-              });
             }
           } else {
-            setState(() {
               academicPerformance = false;
-            });
           }
         }
     }
@@ -390,19 +365,20 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
       await userRef
           .collection('records')
           .doc("Appearance")
-          .update({'quiz_value': appearance});
+          .set({'quiz_value': appearance}, SetOptions(merge: true));
+
       await userRef
           .collection('records')
           .doc("Academic Performance")
-          .update({'quiz_value': academicPerformance});
+          .set({'quiz_value': academicPerformance}, SetOptions(merge: true));
       await userRef
           .collection('records')
           .doc("Career Competence")
-          .update({'quiz_value': careerCompetence});
+          .set({'quiz_value': careerCompetence}, SetOptions(merge: true));
       await userRef
           .collection('records')
           .doc("Social Acceptance")
-          .update({'quiz_value': socialAcceptance});
+          .set({'quiz_value': socialAcceptance}, SetOptions(merge: true));
       dialog.show();
       print('Data saved successfully:');
     } catch (e) {

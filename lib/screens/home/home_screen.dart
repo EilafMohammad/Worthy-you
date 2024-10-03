@@ -8,6 +8,7 @@ import 'package:worthy_you/utils/styles.dart';
 import '../../helpers/meditation_button.dart';
 import '../../helpers/meditation_card.dart';
 import '../my_affirmations_screen.dart';
+import '../quiz/saved_affirmation_screen.dart';
 import '../subscription_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 1; // Default to the Main screen
 
   final List<Widget> _screens = [
-    AffirmationCategoriesScreen(),
+    const SavedAffirmationScreen(),
     const MainScreen(), // Main Screen
     const SubscriptionScreen(),
   ];

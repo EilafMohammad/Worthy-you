@@ -1,14 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:worthy_you/screens/chatbot/chat_bot_intro_screen.dart';
 import 'package:worthy_you/screens/quiz/specific/speech_text_screen.dart';
 import 'package:worthy_you/screens/quiz/take_a_quiz.dart';
+import 'package:worthy_you/utils/DimLoadingDialog.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
 
 import '../../utils/pref_utils.dart';
-import '../audio_play_screen.dart';
 import '../profile/ProfileScreen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -20,11 +22,13 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   String name="N/A";
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   var listMeditationPaths = [
     "Appearance",
-    "Acceptance",
+    "Social Acceptance",
     "Academic Performance",
-    "Competence"
+    "Career Competence"
   ];
   @override
   void initState() {
@@ -65,7 +69,7 @@ class _MainScreenState extends State<MainScreen> {
                         height: 40.0,
                       ),
                       Text(
-                        "Welcome ${name}!",
+                        "Welcome $name!",
                         style: Styles.subHeadingStyle
                             .copyWith(color: MyColors.colorBlack),
                       ),
@@ -107,82 +111,95 @@ class _MainScreenState extends State<MainScreen> {
             const SizedBox(height: 10),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: listMeditationPaths.map((item) {
-                  return Container(
-                    margin: const EdgeInsets.only(right: 10.0),
-                    child: ActionChip(
-                      backgroundColor: MyColors.colorWhite,
-                      label: Text(
-                        item,
-                        style: Styles.textStyle.copyWith(fontSize: 14),
-                      ),
-                      shape: const RoundedRectangleBorder(
-                          side: BorderSide(
-                              color: MyColors.colorBlack, width: 0.5),
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(25.0))),
-                      onPressed: () {
-                        var index = listMeditationPaths.indexOf(item);
-                        switch (index) {
-                          case 0:
-                            {
-                              var args = {
-                                "title": Constants.labelAppearance,
-                                "heading": Constants.infoAppearance,
-                                "image": "images/icon_appearance.png"
-                              };
-                              Get.toNamed(SpeechToTextScreen.tag,
-                                  arguments: args);
-                            }
-                          case 1:
-                            {
-                              var args = {
-                                "title": Constants.labelSocialAcceptance,
-                                "heading": Constants.infoSocialAcceptance,
-                                "image": "images/icon_social_acceptance.png"
-                              };
-                              Get.toNamed(SpeechToTextScreen.tag,
-                                  arguments: args);
-                            }
-                          case 2:
-                            {
-                              var args = {
-                                "title": Constants.labelAcademicPerformance,
-                                "heading": Constants.infoAcademicPerformance,
-                                "image": "images/icon_academic_performance.png"
-                              };
-                              Get.toNamed(SpeechToTextScreen.tag,
-                                  arguments: args);
-                            }
-                          case 3:
-                            {
-                              var args = {
-                                "title": Constants.labelCareerCompetence,
-                                "heading": Constants.infoCareerCompetence,
-                                "image": "images/icon_career_competence.png"
-                              };
-                              Get.toNamed(SpeechToTextScreen.tag,
-                                  arguments: args);
-                            }
-                        }
-                      },
-                    ),
-                  );
-                }).toList(),
-                // children: [
-                //   Chip(label: Text("Appearance")),
-                //   buildMeditationButton(
-                //       title: 'Appearance',
-                //       onPressed: () {
-                //         Navigator.pushNamed(context, 'AppearanceScreen');
-                //       }),
-                //   buildMeditationButton(
-                //       title: 'Academic Performance', onPressed: () {}),
-                //   buildMeditationButton(title: 'Acceptance', onPressed: () {}),
-                //   buildMeditationButton(title: 'Competence', onPressed: () {}),
-                // ],
-              ),
+              child: FutureBuilder(
+                  future: getUserRecords(context),
+                  builder: (context, result) {
+                    if (result.hasData) {
+                      var data = result.data;
+                      return Row(
+                        children: listMeditationPaths.map((val) {
+                          return (data != null && data.where((item) => (item["id"] == val)&& (item["quiz_value"] == true)).isNotEmpty)
+                              ? Container(
+                                  margin: const EdgeInsets.only(right: 10.0),
+                                  child: ActionChip(
+                                    backgroundColor: MyColors.colorWhite,
+                                    label: Text(
+                                      val,
+                                      style: Styles.textStyle
+                                          .copyWith(fontSize: 14),
+                                    ),
+                                    shape: const RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color: MyColors.colorBlack,
+                                            width: 0.5),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(25.0))),
+                                    onPressed: () {
+                                      var index =
+                                          listMeditationPaths.indexOf(val);
+                                      switch (index) {
+                                        case 0:
+                                          {
+                                            var args = {
+                                              "title":
+                                                  Constants.labelAppearance,
+                                              "heading":
+                                                  Constants.infoAppearance,
+                                              "image":
+                                                  "images/icon_appearance.png"
+                                            };
+                                            Get.toNamed(SpeechToTextScreen.tag,
+                                                arguments: args);
+                                          }
+                                        case 1:
+                                          {
+                                            var args = {
+                                              "title": Constants
+                                                  .labelSocialAcceptance,
+                                              "heading": Constants
+                                                  .infoSocialAcceptance,
+                                              "image":
+                                                  "images/icon_social_acceptance.png"
+                                            };
+                                            Get.toNamed(SpeechToTextScreen.tag,
+                                                arguments: args);
+                                          }
+                                        case 2:
+                                          {
+                                            var args = {
+                                              "title": Constants
+                                                  .labelAcademicPerformance,
+                                              "heading": Constants
+                                                  .infoAcademicPerformance,
+                                              "image":
+                                                  "images/icon_academic_performance.png"
+                                            };
+                                            Get.toNamed(SpeechToTextScreen.tag,
+                                                arguments: args);
+                                          }
+                                        case 3:
+                                          {
+                                            var args = {
+                                              "title": Constants
+                                                  .labelCareerCompetence,
+                                              "heading": Constants
+                                                  .infoCareerCompetence,
+                                              "image":
+                                                  "images/icon_career_competence.png"
+                                            };
+                                            Get.toNamed(SpeechToTextScreen.tag,
+                                                arguments: args);
+                                          }
+                                      }
+                                    },
+                                  ),
+                                )
+                              : Container();
+                        }).toList(),
+                      );
+                    }
+                    return Container();
+                  }),
             ),
             const SizedBox(height: 10),
             SizedBox(
@@ -289,5 +306,45 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
     );
+  }
+
+  Future<List<Map<String, dynamic>>> getUserRecords(
+      BuildContext context) async {
+    var dialog = DimLoadingDialog(context,
+        blur: 3,
+        dismissable: false,
+        backgroundColor: const Color(0x30000000),
+        animationDuration: const Duration(milliseconds: 100));
+    String userId = await MyPrefUtils.getString(MyPrefUtils.userId);
+    try {
+      // dialog.show();
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(userId).get();
+
+      if (userDoc.exists) {
+        QuerySnapshot recordsSnapshot =
+            await userDoc.reference.collection('records').get();
+        List<Map<String, dynamic>> records = recordsSnapshot.docs.map((doc) {
+          return {
+            'id': doc.id,
+            ...doc.data() as Map<String, dynamic>,
+            // Add document data
+          };
+        }).toList();
+        return records;
+      } else {
+        if (kDebugMode) {
+          print('User not found');
+        }
+        return [];
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching user records: $e');
+      }
+      return [];
+    } finally {
+      dialog.dismiss();
+    }
   }
 }
