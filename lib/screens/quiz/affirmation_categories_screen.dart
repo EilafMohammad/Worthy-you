@@ -169,8 +169,7 @@ class _AffirmationCategoriesScreenState
                                   Get.toNamed(AudioPlayerAppearanceScreen.tag,
                                       arguments: {
                                         "text": responseText,
-                                        "category":
-                                            Constants.labelSocialAcceptance,
+                                        "category": Constants.labelSocialAcceptance,
                                         "data": jsonDecode(val ?? "")
                                       });
                                 } else {
@@ -190,15 +189,12 @@ class _AffirmationCategoriesScreenState
                               //     arguments: args);
 
                               responseText = "";
-                              getUserVoice(Constants.labelAcademicPerformance,
-                                      context)
-                                  .then((val) {
+                              getUserVoice(Constants.labelAcademicPerformance, context).then((val) {
                                 if (responseText.isNotEmpty) {
                                   Get.toNamed(AudioPlayerAppearanceScreen.tag,
                                       arguments: {
                                         "text": responseText,
-                                        "category":
-                                            Constants.labelAcademicPerformance,
+                                        "category": Constants.labelAcademicPerformance,
                                         "data": jsonDecode(val ?? "")
                                       });
                                 } else {
@@ -229,8 +225,7 @@ class _AffirmationCategoriesScreenState
                                         "data": jsonDecode(val ?? "")
                                       });
                                 } else {
-                                  Get.toNamed(SpeechToTextScreen.tag,
-                                      arguments: args);
+                                  Get.offAndToNamed(SpeechToTextScreen.tag, arguments: args);
                                 }
                               });
                             }

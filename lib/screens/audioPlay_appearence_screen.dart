@@ -161,12 +161,10 @@ class _AudioPlayerAppearanceScreenState
                       Wrap(
                         spacing: 10.0,
                         children: [
-                          _buildNarratorButton(
-                              "Female", voice?.isNotEmpty == true),
+                          _buildNarratorButton("Female", voice?.isNotEmpty == true),
                           _buildNarratorButton("Male", true),
                           // Disabled button
-                          _buildNarratorButton(
-                              "My Voice", voice?.isEmpty == true),
+                          _buildNarratorButton("My Voice", voice?.isEmpty == true),
                           // Disabled button
                         ],
                       ),

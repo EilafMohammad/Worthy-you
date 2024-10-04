@@ -243,7 +243,7 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
                     padding: const EdgeInsets.all(0.0),
                     onPressed: () async {
                       await saveUserResult().then((value) {
-                        Get.toNamed(AffirmationCategoriesScreen.tag);
+                        Get.offAndToNamed(AffirmationCategoriesScreen.tag);
                       });
                     },
                     icon: const ImageIcon(

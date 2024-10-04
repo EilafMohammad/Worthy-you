@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:worthy_you/extensions/map_extentions.dart';
 import 'package:worthy_you/screens/chatbot/chat_bot_intro_screen.dart';
 import 'package:worthy_you/screens/quiz/specific/speech_text_screen.dart';
 import 'package:worthy_you/screens/quiz/take_a_quiz.dart';
@@ -33,6 +35,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     _loadUserData();
+    getUserRecords();
     super.initState();
   }
   void _loadUserData() async {
@@ -111,95 +114,75 @@ class _MainScreenState extends State<MainScreen> {
             const SizedBox(height: 10),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: FutureBuilder(
-                  future: getUserRecords(context),
-                  builder: (context, result) {
-                    if (result.hasData) {
-                      var data = result.data;
-                      return Row(
-                        children: listMeditationPaths.map((val) {
-                          return (data != null && data.where((item) => (item["id"] == val)&& (item["quiz_value"] == true)).isNotEmpty)
-                              ? Container(
-                                  margin: const EdgeInsets.only(right: 10.0),
-                                  child: ActionChip(
-                                    backgroundColor: MyColors.colorWhite,
-                                    label: Text(
-                                      val,
-                                      style: Styles.textStyle
-                                          .copyWith(fontSize: 14),
-                                    ),
-                                    shape: const RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            color: MyColors.colorBlack,
-                                            width: 0.5),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(25.0))),
-                                    onPressed: () {
-                                      var index =
-                                          listMeditationPaths.indexOf(val);
-                                      switch (index) {
-                                        case 0:
-                                          {
-                                            var args = {
-                                              "title":
-                                                  Constants.labelAppearance,
-                                              "heading":
-                                                  Constants.infoAppearance,
-                                              "image":
-                                                  "images/icon_appearance.png"
-                                            };
-                                            Get.toNamed(SpeechToTextScreen.tag,
-                                                arguments: args);
-                                          }
-                                        case 1:
-                                          {
-                                            var args = {
-                                              "title": Constants
-                                                  .labelSocialAcceptance,
-                                              "heading": Constants
-                                                  .infoSocialAcceptance,
-                                              "image":
-                                                  "images/icon_social_acceptance.png"
-                                            };
-                                            Get.toNamed(SpeechToTextScreen.tag,
-                                                arguments: args);
-                                          }
-                                        case 2:
-                                          {
-                                            var args = {
-                                              "title": Constants
-                                                  .labelAcademicPerformance,
-                                              "heading": Constants
-                                                  .infoAcademicPerformance,
-                                              "image":
-                                                  "images/icon_academic_performance.png"
-                                            };
-                                            Get.toNamed(SpeechToTextScreen.tag,
-                                                arguments: args);
-                                          }
-                                        case 3:
-                                          {
-                                            var args = {
-                                              "title": Constants
-                                                  .labelCareerCompetence,
-                                              "heading": Constants
-                                                  .infoCareerCompetence,
-                                              "image":
-                                                  "images/icon_career_competence.png"
-                                            };
-                                            Get.toNamed(SpeechToTextScreen.tag,
-                                                arguments: args);
-                                          }
-                                      }
-                                    },
-                                  ),
-                                )
-                              : Container();
-                        }).toList(),
-                      );
-                    }
-                    return Container();
-                  }),
+              child: Row(
+                children: listMeditationPaths.map((val) {
+                  return Container(
+                    margin: const EdgeInsets.only(right: 10.0),
+                    child: ActionChip(
+                      backgroundColor: MyColors.colorWhite,
+                      label: Text(
+                        val,
+                        style: Styles.textStyle.copyWith(fontSize: 14),
+                      ),
+                      shape: const RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: MyColors.colorBlack, width: 0.5),
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(25.0))),
+                      onPressed: () {
+                        var index = listMeditationPaths.indexOf(val);
+                        switch (index) {
+                          case 0:
+                            {
+                              var args = {
+                                "title": Constants.labelAppearance,
+                                "heading": Constants.infoAppearance,
+                                "image": "images/icon_appearance.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                          case 1:
+                            {
+                              var args = {
+                                "title": Constants.labelSocialAcceptance,
+                                "heading": Constants.infoSocialAcceptance,
+                                "image":
+                                "images/icon_social_acceptance.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                          case 2:
+                            {
+                              var args = {
+                                "title":
+                                Constants.labelAcademicPerformance,
+                                "heading":
+                                Constants.infoAcademicPerformance,
+                                "image":
+                                "images/icon_academic_performance.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                          case 3:
+                            {
+                              var args = {
+                                "title": Constants.labelCareerCompetence,
+                                "heading": Constants.infoCareerCompetence,
+                                "image":
+                                "images/icon_career_competence.png"
+                              };
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
+                            }
+                        }
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
             const SizedBox(height: 10),
             SizedBox(
@@ -308,43 +291,21 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getUserRecords(
-      BuildContext context) async {
-    var dialog = DimLoadingDialog(context,
-        blur: 3,
-        dismissable: false,
-        backgroundColor: const Color(0x30000000),
-        animationDuration: const Duration(milliseconds: 100));
-    String userId = await MyPrefUtils.getString(MyPrefUtils.userId);
-    try {
-      // dialog.show();
-      DocumentSnapshot userDoc =
-          await _firestore.collection('users').doc(userId).get();
-
-      if (userDoc.exists) {
-        QuerySnapshot recordsSnapshot =
-            await userDoc.reference.collection('records').get();
-        List<Map<String, dynamic>> records = recordsSnapshot.docs.map((doc) {
-          return {
-            'id': doc.id,
-            ...doc.data() as Map<String, dynamic>,
-            // Add document data
-          };
-        }).toList();
-        return records;
-      } else {
-        if (kDebugMode) {
-          print('User not found');
+  Future<void> getUserRecords() async {
+    if(FirebaseAuth.instance.currentUser?.uid !=null){
+      try {
+        var userDoc = await _firestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get();
+        if (userDoc.exists) {
+          if(userDoc.data()?.containsKey("voice") ==  true){
+            var voice = userDoc.data()?.getValueOfKey("voice");
+            MyPrefUtils.putString(MyPrefUtils.voiceTemplate, voice);
+          }
         }
-        return [];
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error fetching user records: $e');
+        }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching user records: $e');
-      }
-      return [];
-    } finally {
-      dialog.dismiss();
     }
   }
 }

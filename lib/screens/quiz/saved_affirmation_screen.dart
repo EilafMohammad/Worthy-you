@@ -124,12 +124,10 @@ class _SavedAffirmationScreenState
                       onTap: () {
                         if (recordsList.where((item)=> (item["id"] == imagePaths[index]['id'])).isNotEmpty) {
                           var quizValue = recordsList.firstWhere((item) => item["id"] == imagePaths[index]['id']);
-
-
                           Get.toNamed(AudioPlayerAppearanceScreen.tag,
                               arguments: {
                                 "text": quizValue["text"],
-                                "category": Constants.labelCareerCompetence,
+                                "category": quizValue["id"],
                                 "data": jsonDecode(quizValue["response_data"])
                               });
                         }

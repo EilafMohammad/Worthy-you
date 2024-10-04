@@ -104,23 +104,21 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(_formatDuration(_position)),
-              SizedBox(
-                width: 25,
-              ),
-              Expanded(
-                child: Container(
-                  height: 100.0,
-
-                  // padding: const EdgeInsets.symmetric(horizontal: 1.0),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 60.0,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(_formatDuration(_position)),
+                const SizedBox(
+                  width: 25,
+                ),
+                Expanded(
                   child: CustomPaint(
                     painter: AudioWaveformPainter(
                       animation: _controller,
@@ -129,76 +127,72 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget>
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(_formatDuration(_duration)),
-            ],
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(_formatDuration(_duration)),
+              ],
+            ),
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Material(
-              child: InkWell(
-                // highlightColor: Colors.red,
-                splashColor: Colors.purple[50],
-                onTap: () {
-                  _seekBackward;
-                },
-                child:
-                    Image.asset(height: 35, width: 35, 'images/icons/next.png'),
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.replay_10),
-              iconSize: 36.0,
-              color: Colors.deepPurple.shade300,
-              onPressed: _seekBackward,
-            ),
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.deepPurple.shade300,
-              child: Align(
-                alignment: Alignment.center,
-                child: IconButton(
-                  icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-                  iconSize: 40.0,
-                  color: Colors.white,
-                  onPressed: _playPause,
+          const SizedBox(height: 20.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Material(
+                child: InkWell(
+                  splashColor: Colors.purple[50],
+                  onTap: () {
+                    _seekBackward;
+                  },
+                  child:
+                      Image.asset(height: 25, width: 25, 'images/icons/next.png'),
                 ),
               ),
-            ),
-
-            IconButton(
-              icon: const Icon(Icons.forward_10),
-              iconSize: 36.0,
-              color: Colors.deepPurple.shade300,
-              onPressed: _seekForward,
-            ),
-            Material(
-              child: InkWell(
-                splashColor: Colors.purple[50],
-                onTap: () {
-                  _seekForward;
-                },
-                child: Image.asset(
-                    height: 35, width: 35, 'images/icons/previous.png'),
+              IconButton(
+                icon: const Icon(Icons.replay_10),
+                iconSize: 25.0,
+                color: Colors.deepPurple.shade300,
+                onPressed: _seekBackward,
               ),
-            ),
-            // IconButton(
-            //   icon: const Icon(Icons.skip_next_outlined),
-            //   iconSize: 36.0,
-            //   color: Colors.deepPurple,
-            //   onPressed: _seekForward,
-            // ),
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        )
-      ],
+              CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.deepPurple.shade300,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: IconButton(
+                    icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                    iconSize: 40.0,
+                    color: Colors.white,
+                    onPressed: _playPause,
+                  ),
+                ),
+              ),
+
+              IconButton(
+                icon: const Icon(Icons.forward_10),
+                iconSize: 25.0,
+                color: Colors.deepPurple.shade300,
+                onPressed: _seekForward,
+              ),
+              Material(
+                child: InkWell(
+                  splashColor: Colors.purple[50],
+                  onTap: () {
+                    _seekForward;
+                  },
+                  child: Image.asset(height: 25, width: 25, 'images/icons/previous.png'),
+                ),
+              ),
+              // IconButton(
+              //   icon: const Icon(Icons.skip_next_outlined),
+              //   iconSize: 36.0,
+              //   color: Colors.deepPurple,
+              //   onPressed: _seekForward,
+              // ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -270,13 +264,12 @@ class AudioWaveformPainter extends CustomPainter {
     final numberOfWaves = waveHeights.length;
     final waveLength = width / numberOfWaves;
 
-    final playedRatio =
-        playedDuration.inMilliseconds / totalDuration.inMilliseconds;
+    final playedRatio = playedDuration.inMilliseconds / totalDuration.inMilliseconds;
     // final playedRatio = (animation.value * totalDuration.inMilliseconds) / totalDuration.inMilliseconds;
 
     for (int i = 0; i < numberOfWaves; i++) {
       double x = i * waveLength;
-      double y = waveHeight - waveHeights[i] / 2;
+      double y = waveHeight - ((waveHeights[i])-40) / 2;
 
       final paint = (i / numberOfWaves) <= playedRatio
           ? playedWavePaint
