@@ -23,9 +23,15 @@ class _QuizScreenState extends State<QuizScreen> {
 
   void _onOptionSelected({required Option option}) {
     if (_currentQuestionIndex < _questions.length - 1) {
-      setState(() {
-        addItem(option: option);
-      });
+      addItem(option: option);
+      _questions = getAllQuestions();
+      if(_selectedQuestions.where((element) => element?.questionId == 0000 && element?.catId == 3 && (element?.optionId == 0002 || element?.optionId == 0003)).isNotEmpty){
+        _questions.removeWhere((item)=> item.questionId != 0000 && item.catId == 3);
+      }
+      if(_selectedQuestions.where((element) => element?.questionId == 0000 && element?.catId == 4 && (element?.optionId == 0003 || element?.optionId == 0004)).isNotEmpty){
+        _questions.removeWhere((item)=> item.questionId != 0000 && item.catId == 4);
+      }
+      setState(() {});
     } else {
       Get.offAndToNamed(QuizResultsScreen.tag,arguments: _selectedQuestions);
     }
@@ -151,6 +157,8 @@ class _QuizScreenState extends State<QuizScreen> {
                             setState(() {
                               _currentQuestionIndex++;
                             });
+                          }else{
+                            Get.offAndToNamed(QuizResultsScreen.tag,arguments: _selectedQuestions);
                           }
                         }
                       },
@@ -193,7 +201,7 @@ class _QuizScreenState extends State<QuizScreen> {
     return (_currentQuestionIndex + 1) / _questions.length;
   }
 
-  List<Data> getAllQuestions() {
+  List<Data> getAllQuestions({bool skipAcademicPerformance = false,bool careerCompetence = false}) {
     List<Data> allQuestions = [];
     for (var category in Constants.questionsModel.questionsData ?? []) {
       if (category.data != null) {

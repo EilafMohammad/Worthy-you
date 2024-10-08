@@ -123,111 +123,43 @@ class _AffirmationCategoriesScreenState
                 itemBuilder: (context, index) {
                   return InkWell(
                       onTap: () {
-                        // Get.toNamed(AudioPlayerAppearanceScreen.tag);
-                        switch (index) {
-                          case 0:
+                        switch (imagePaths[index]['id']) {
+                          case "Appearance":
                             {
                               var args = {
                                 "title": Constants.labelAppearance,
                                 "heading": Constants.infoAppearance,
                                 "image": "images/icon_appearance.png"
                               };
-                              // Get.toNamed(SpeechToTextScreen.tag,
-                              //     arguments: args);
-
-                              responseText = "";
-                              getUserVoice(Constants.labelAppearance, context)
-                                  .then((val) {
-                                if (responseText.isNotEmpty) {
-                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
-                                      arguments: {
-                                        "text": responseText,
-                                        "category": Constants.labelAppearance,
-                                        "data": jsonDecode(val ?? "")
-                                      });
-                                } else {
-                                  Get.toNamed(SpeechToTextScreen.tag,
-                                      arguments: args);
-                                }
-                              });
+                              Get.offAndToNamed(SpeechToTextScreen.tag, arguments: args);
                             }
-                          case 1:
+                          case "Social Acceptance":
                             {
                               var args = {
                                 "title": Constants.labelSocialAcceptance,
                                 "heading": Constants.infoSocialAcceptance,
                                 "image": "images/icon_social_acceptance.png"
                               };
-                              // Get.toNamed(SpeechToTextScreen.tag,
-                              //     arguments: args);
-
-                              responseText = "";
-                              getUserVoice(
-                                      Constants.labelSocialAcceptance, context)
-                                  .then((val) {
-                                if (responseText.isNotEmpty) {
-                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
-                                      arguments: {
-                                        "text": responseText,
-                                        "category": Constants.labelSocialAcceptance,
-                                        "data": jsonDecode(val ?? "")
-                                      });
-                                } else {
-                                  Get.toNamed(SpeechToTextScreen.tag,
-                                      arguments: args);
-                                }
-                              });
+                              Get.toNamed(SpeechToTextScreen.tag, arguments: args);
                             }
-                          case 2:
+                          case "Academic Performance":
                             {
                               var args = {
                                 "title": Constants.labelAcademicPerformance,
                                 "heading": Constants.infoAcademicPerformance,
                                 "image": "images/icon_academic_performance.png"
                               };
-                              // Get.toNamed(SpeechToTextScreen.tag,
-                              //     arguments: args);
-
-                              responseText = "";
-                              getUserVoice(Constants.labelAcademicPerformance, context).then((val) {
-                                if (responseText.isNotEmpty) {
-                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
-                                      arguments: {
-                                        "text": responseText,
-                                        "category": Constants.labelAcademicPerformance,
-                                        "data": jsonDecode(val ?? "")
-                                      });
-                                } else {
-                                  Get.toNamed(SpeechToTextScreen.tag,
-                                      arguments: args);
-                                }
-                              });
+                              Get.toNamed(SpeechToTextScreen.tag,
+                                  arguments: args);
                             }
-                          case 3:
+                          case "Career Competence":
                             {
                               var args = {
                                 "title": Constants.labelCareerCompetence,
                                 "heading": Constants.infoCareerCompetence,
                                 "image": "images/icon_career_competence.png"
                               };
-                              // Get.toNamed(SpeechToTextScreen.tag,
-                              //     arguments: args);
-
-                              responseText = "";
-                              getUserVoice(
-                                      Constants.labelCareerCompetence, context)
-                                  .then((val) {
-                                if (responseText.isNotEmpty) {
-                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
-                                      arguments: {
-                                        "text": responseText,
-                                        "category": Constants.labelCareerCompetence,
-                                        "data": jsonDecode(val ?? "")
-                                      });
-                                } else {
-                                  Get.offAndToNamed(SpeechToTextScreen.tag, arguments: args);
-                                }
-                              });
+                              Get.toNamed(SpeechToTextScreen.tag, arguments: args);
                             }
                         }
                       },
@@ -272,7 +204,6 @@ class _AffirmationCategoriesScreenState
     }
     return false;
   }
-
   Future<String?> getUserVoice(
       String competenceId, BuildContext context) async {
     var dialog = DimLoadingDialog(context,

@@ -243,7 +243,7 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
                     padding: const EdgeInsets.all(0.0),
                     onPressed: () async {
                       await saveUserResult().then((value) {
-                        Get.offAndToNamed(AffirmationCategoriesScreen.tag);
+                        Get.toNamed(AffirmationCategoriesScreen.tag);
                       });
                     },
                     icon: const ImageIcon(
@@ -379,10 +379,10 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
           .collection('records')
           .doc("Social Acceptance")
           .set({'quiz_value': socialAcceptance}, SetOptions(merge: true));
-      dialog.show();
+      dialog.dismiss();
       print('Data saved successfully:');
     } catch (e) {
-      dialog.show();
+      dialog.dismiss();
       print('Error saving data: $e');
     }
   }

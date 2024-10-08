@@ -87,7 +87,7 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
     })?.then((val) {
       if (val != null) {
         if (val is Map && val.containsKey("url")) {
-          Get.offAndToNamed(AudioPlayerAppearanceScreen.tag, arguments: {
+          Get.toNamed(AudioPlayerAppearanceScreen.tag, arguments: {
             "text": val.getValueOfKey("content"),
             "category": title,
             "data": val
