@@ -186,53 +186,57 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              heading,
-              textAlign: TextAlign.center,
-              style:
-                  Styles.subHeadingStyle.copyWith(color: MyColors.colorBlack),
-            ),
-            const SizedBox(height: 10),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 16),
             Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xffffffff),
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: const Color(0xff0f11171a)),
-                ),
-                child: SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Text(
-                    _text.isEmpty ? "Your text will appear here..." : _text,
-                    maxLines: 5,
-                    style: Styles.textStyle.copyWith(
-                        fontSize: 12,
-                        color: _text.isEmpty
-                            ? MyColors.textColorSecondary
-                            : MyColors.colorBlack),
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    Text(
+                      heading,
+                      textAlign: TextAlign.center,
+                      style: Styles.subHeadingStyle
+                          .copyWith(color: MyColors.colorBlack),
+                    ),
+                    const SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Image.asset(
+                        imagePath,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xffffffff),
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: const Color(0xff0f11171a)),
                   ),
+                      child: Text(
+                        _text.isEmpty ? "Your text will appear here..." : _text,
+                        maxLines: 5,
+                        style: Styles.textStyle.copyWith(
+                            fontSize: 12,
+                            color: _text.isEmpty
+                                ? MyColors.textColorSecondary
+                                : MyColors.colorBlack),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      Constants.labelPressHoldMic,
+                      textAlign: TextAlign.center,
+                      style: Styles.buttonTextStyle
+                          .copyWith(color: MyColors.textColorSecondary),
+                    ),
+                    const SizedBox(height: 24),
+                    // Updated Row with Clear, Mic, and Submit buttons in correct positions
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              Constants.labelPressHoldMic,
-              textAlign: TextAlign.center,
-              style: Styles.buttonTextStyle
-                  .copyWith(color: MyColors.textColorSecondary),
-            ),
-            const SizedBox(height: 24),
-            // Updated Row with Clear, Mic, and Submit buttons in correct positions
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -278,7 +282,9 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
                 Opacity(
                   opacity: _text.isNotEmpty ? 1 : 0.2,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed:
+                    _text.isEmpty ?null
+                        :() {
                       // Send to ChatGPT if the user submits the text
                       if (_text.isNotEmpty) {
                         _sendToChatGPT(

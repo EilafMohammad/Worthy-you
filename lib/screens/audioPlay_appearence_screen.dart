@@ -60,156 +60,158 @@ class _AudioPlayerAppearanceScreenState
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              padding: const EdgeInsets.all(0.0),
-              onPressed: () {
-                Get.back();
-              },
-              icon: const ImageIcon(
-                AssetImage(
-                  "images/icon_back.png",
-                ),
-                size: 30.0,
-              )),
-          title: Text(
-            title,
-            style: Styles.subHeadingStyle,
-          ),
-          centerTitle: true,
-          backgroundColor: MyColors.backgroundColor,
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            padding: const EdgeInsets.all(0.0),
+            onPressed: () {
+              Get.back();
+            },
+            icon: const ImageIcon(
+              AssetImage(
+                "images/icon_back.png",
+              ),
+              size: 30.0,
+            )),
+        title: Text(
+          title,
+          style: Styles.subHeadingStyle,
         ),
+        centerTitle: true,
         backgroundColor: MyColors.backgroundColor,
-        body: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Image Section
-                      const CircleAvatar(
-                        radius: 100,
-                        backgroundImage: AssetImage(
-                            'images/Group15.png'), // Assuming image path is correct
+      ),
+      backgroundColor: MyColors.backgroundColor,
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Image Section
+                    const CircleAvatar(
+                      radius: 100,
+                      backgroundImage: AssetImage(
+                          'images/Group15.png'), // Assuming image path is correct
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // Text Response Box
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: const Color(0xffFFFFFF),
+                        border: Border.all(
+                            color: const Color(0xff0F1117).withOpacity(0.2)),
                       ),
-
-                      const SizedBox(height: 10),
-
-                      // Text Response Box
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: const Color(0xffFFFFFF),
-                          border: Border.all(
-                              color: const Color(0xff0F1117).withOpacity(0.2)),
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 20),
-                            child: Text(
-                              responseText,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff0F1117),
-                              ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 20),
+                          child: Text(
+                            responseText,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xff0F1117),
                             ),
                           ),
                         ),
                       ),
+                    ),
 
-                      const SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                      // Background Effects Section
-                      const Text(
-                        "Background Effects",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey),
-                      ),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        spacing: 10.0,
-                        children: [
-                          _buildEffectButton("Ocean"),
-                          _buildEffectButton("Rain"),
-                          _buildEffectButton("Forest"),
-                          _buildEffectButton("None"),
-                        ],
-                      ),
+                    // Background Effects Section
+                    const Text(
+                      "Background Effects",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 10.0,
+                      children: [
+                        _buildEffectButton("Ocean", true),
+                        _buildEffectButton("Rain", true),
+                        // _buildEffectButton("Forest"),
+                        _buildEffectButton("None",false),
+                      ],
+                    ),
 
-                      const SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                      // Narrator Selection Section
-                      const Text(
-                        "Narrator",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey),
-                      ),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        spacing: 10.0,
-                        children: [
-                          _buildNarratorButton("Female", voice?.isNotEmpty == true),
-                          _buildNarratorButton("Male", true),
-                          // Disabled button
-                          _buildNarratorButton("My Voice", voice?.isEmpty == true),
-                          // Disabled button
-                        ],
-                      ),
+                    // Narrator Selection Section
+                    const Text(
+                      "Narrator",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 10.0,
+                      children: [
+                        _buildNarratorButton("Female", voice?.isNotEmpty == true),
+                        _buildNarratorButton("Male", true),
+                        // Disabled button
+                        _buildNarratorButton("My Voice", voice?.isEmpty == true),
+                        // Disabled button
+                      ],
+                    ),
 
-                      const SizedBox(height: 20),
-                    ],
-                  ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
             ),
-            Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 3,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: AudioPlayerWidget(audioUrl: responseUrl)),
-          ],
-        ),
+          ),
+          Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 3,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: AudioPlayerWidget(audioUrl: responseUrl)),
+        ],
       ),
     );
   }
 
   // Button builder for background effects
-  Widget _buildEffectButton(String label) {
+  Widget _buildEffectButton(String label, bool disabled) {
     return ElevatedButton(
-      onPressed: () {
+      onPressed: disabled
+          ? null
+          : () {
         // Handle background effect change
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xffFFFFFF),
-        side: const BorderSide(color: Colors.grey),
+        side: disabled
+            ? BorderSide(color: Colors.grey.withOpacity(0.5))
+            : const BorderSide(color: Colors.grey),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
       child: Text(
         label,
         style:
-            const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            TextStyle(color: disabled ? Colors.grey : Colors.black, fontWeight: FontWeight.bold),
       ),
     );
   }

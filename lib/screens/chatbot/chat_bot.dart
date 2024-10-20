@@ -167,45 +167,43 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: MyColors.backgroundColor,
-        appBar: AppBar(
-          title: const Text(
-            Constants.labelVentingBot,
-            style: Styles.subHeadingStyle,
-          ),
-          centerTitle: true,
-          backgroundColor: MyColors.backgroundColor,
+    return Scaffold(
+      backgroundColor: MyColors.backgroundColor,
+      appBar: AppBar(
+        title: const Text(
+          Constants.labelVentingBot,
+          style: Styles.subHeadingStyle,
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                controller: _scrollController, // Attach the scroll controller
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  return _messages[index];
-                },
-              ),
-            ),
-            if (_isLoading)
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: DotsLoadingIndicator(),
-              ),
-            const Divider(height: 1.0,),
-            MessageInput(
-              controller: _controller,
-              onSend: (value) {
-                if (value.isNotEmpty) {
-                  _sendMessage(value);
-                  _controller.clear();
-                }
+        centerTitle: true,
+        backgroundColor: MyColors.backgroundColor,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController, // Attach the scroll controller
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                return _messages[index];
               },
             ),
-          ],
-        ),
+          ),
+          if (_isLoading)
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: DotsLoadingIndicator(),
+            ),
+          const Divider(height: 1.0,),
+          MessageInput(
+            controller: _controller,
+            onSend: (value) {
+              if (value.isNotEmpty) {
+                _sendMessage(value);
+                _controller.clear();
+              }
+            },
+          ),
+        ],
       ),
     );
   }

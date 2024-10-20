@@ -44,83 +44,81 @@ class _ChatBotIntroScreenState extends State<ChatBotIntroScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: MyColors.backgroundColor,
-        body: Column(
-          children: [
-            Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    icon: const Icon(Icons.arrow_back)),
-                const Expanded(
-                    child: Text(
-                  Constants.labelVentingBot,
-                  textAlign: TextAlign.center,
-                  style: Styles.headingStyle,
-                )),
-                Opacity(
-                  opacity: 0,
-                  child: IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.arrow_back)),
-                )
-              ],
-            ),
-            Expanded(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(
-                          top: 150.0, right: 20.0, left: 20.0),
-                      child: Card(
-                        color: const Color(0XFFFFFFFF),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 2,
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                              top: 50.0, right: 20.0, left: 20.0, bottom: 20.0),
-                          child: Text(
-                            Constants.chatBotIntroInfo,
-                            textAlign: TextAlign.center,
-                            style: Styles.textStyle
-                                .copyWith(color: MyColors.textColorSecondary),
-                          ),
+    return Scaffold(
+      backgroundColor: MyColors.backgroundColor,
+      body: Column(
+        children: [
+          Row(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  icon: const Icon(Icons.arrow_back)),
+              const Expanded(
+                  child: Text(
+                Constants.labelVentingBot,
+                textAlign: TextAlign.center,
+                style: Styles.headingStyle,
+              )),
+              Opacity(
+                opacity: 0,
+                child: IconButton(
+                    onPressed: () {}, icon: const Icon(Icons.arrow_back)),
+              )
+            ],
+          ),
+          Expanded(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(
+                        top: 150.0, right: 20.0, left: 20.0),
+                    child: Card(
+                      color: const Color(0XFFFFFFFF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 2,
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                            top: 50.0, right: 20.0, left: 20.0, bottom: 20.0),
+                        child: Text(
+                          Constants.chatBotIntroInfo,
+                          textAlign: TextAlign.center,
+                          style: Styles.textStyle
+                              .copyWith(color: MyColors.textColorSecondary),
                         ),
                       ),
                     ),
-                    CircleAvatar(
-                      radius: 100,
-                      backgroundColor: Colors.blue[50],
-                      child: Image.asset(
-                        'images/echo_ventingbot.png',
-                        // Replace with the image path
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin:
-                      const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
-                  child: PrimaryButton(
-                    title: Constants.labelGetStarted,
-                    backgroundColor: MyColors.btnColorSecondary,
-                    onPressed: _startChat,
                   ),
-                )
-              ],
-            )),
-          ],
-        ),
+                  CircleAvatar(
+                    radius: 100,
+                    backgroundColor: Colors.blue[50],
+                    child: Image.asset(
+                      'images/echo_ventingbot.png',
+                      // Replace with the image path
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                margin:
+                    const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+                child: PrimaryButton(
+                  title: Constants.labelGetStarted,
+                  backgroundColor: MyColors.btnColorSecondary,
+                  onPressed: _startChat,
+                ),
+              )
+            ],
+          )),
+        ],
       ),
     );
   }

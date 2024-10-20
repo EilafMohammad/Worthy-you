@@ -35,15 +35,19 @@ class _SignInScreenState extends State<SignInScreen> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   _signInWithGoogle() async {
+    var dialog = DimLoadingDialog(context,
+        blur: 3,
+        dismissable: false,
+        backgroundColor: const Color(0x30000000),
+        animationDuration: const Duration(milliseconds: 100));
     try {
+      dialog.show();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        // The user canceled the sign-in
         return null;
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -77,12 +81,16 @@ class _SignInScreenState extends State<SignInScreen> {
       await MyPrefUtils.putString(MyPrefUtils.userId, userCredential.user!.uid);
       await MyPrefUtils.putBool(MyPrefUtils.isLoggedIn, true);
       await MyPrefUtils.putBool(MyPrefUtils.isGoogleLoggedIn, true);
+      dialog.dismiss();
       if (await MyPrefUtils.getBool(MyPrefUtils.isSliderSeen)) {
         Get.offAllNamed(HomeScreen.tag);
       } else {
         Get.offAllNamed(OnboardingScreen.tag);
       }
-    } catch (e) {}
+    } catch (e) {
+      dialog.dismiss();
+
+    }
   }
 
   @override
