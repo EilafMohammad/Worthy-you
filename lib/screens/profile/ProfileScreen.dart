@@ -109,12 +109,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> openTheRecorder() async {
-    if (!kIsWeb) {
-      var status = await Permission.microphone.request();
-      if (status != PermissionStatus.granted) {
-        throw RecordingPermissionException('Microphone permission not granted');
-      }
-    }
+    // if (!kIsWeb) {
+    //   var status = await Permission.microphone.request();
+    //   if (status != PermissionStatus.granted) {
+    //     throw RecordingPermissionException('Microphone permission not granted');
+    //   }
+    // }
     await _mRecorder!.openRecorder();
     if (!await _mRecorder!.isEncoderSupported(_codec) && kIsWeb) {
       _codec = Codec.opusWebM;
@@ -149,8 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // ----------------------  Here is the code for recording and playback -------
 
   void record() {
-    _mRecorder!
-        .startRecorder(
+    _mRecorder!.startRecorder(
       toFile: _mPath,
       codec: _codec,
       audioSource: theSource,

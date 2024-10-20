@@ -27,12 +27,12 @@ class _SplashScreenState extends State<SplashScreen> {
       // Get.toNamed(OnboardingScreen.tag);
       if(await MyPrefUtils.getBool(MyPrefUtils.isLoggedIn)){
         if(await MyPrefUtils.getBool(MyPrefUtils.isSliderSeen)){
-          Get.toNamed(HomeScreen.tag);
+          Get.offAllNamed(HomeScreen.tag);
         }else{
-          Get.toNamed(OnboardingScreen.tag);
+          Get.offAllNamed(OnboardingScreen.tag);
         }
       }else{
-        Get.toNamed(SignInScreen.tag);
+        Get.offAllNamed(SignInScreen.tag);
       }
 
 

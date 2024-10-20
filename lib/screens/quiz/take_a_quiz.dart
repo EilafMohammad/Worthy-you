@@ -23,9 +23,15 @@ class _QuizScreenState extends State<QuizScreen> {
 
   void _onOptionSelected({required Option option}) {
     if (_currentQuestionIndex < _questions.length - 1) {
-      setState(() {
-        addItem(option: option);
-      });
+      addItem(option: option);
+      _questions = getAllQuestions();
+      if(_selectedQuestions.where((element) => element?.questionId == 0000 && element?.catId == 3 && (element?.optionId == 0002 || element?.optionId == 0003)).isNotEmpty){
+        _questions.removeWhere((item)=> item.questionId != 0000 && item.catId == 3);
+      }
+      if(_selectedQuestions.where((element) => element?.questionId == 0000 && element?.catId == 4 && (element?.optionId == 0003 || element?.optionId == 0004)).isNotEmpty){
+        _questions.removeWhere((item)=> item.questionId != 0000 && item.catId == 4);
+      }
+      setState(() {});
     } else {
       Get.offAndToNamed(QuizResultsScreen.tag,arguments: _selectedQuestions);
     }
@@ -39,131 +45,131 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              padding: const EdgeInsets.all(0.0),
-              onPressed: () {
-                Get.back();
-              },
-              icon: const ImageIcon(
-                AssetImage(
-                  "images/icon_back.png",
-                ),
-                size: 30.0,
-              )
-          ),
-          elevation: 0,
-          title: const Text(
-            Constants.labelFiguringInsecurities,
-            style: Styles.subHeadingStyle,
-          ),
-          backgroundColor: MyColors.backgroundColor,
-          surfaceTintColor: Colors.transparent,
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            padding: const EdgeInsets.all(0.0),
+            onPressed: () {
+              Get.back();
+            },
+            icon: const ImageIcon(
+              AssetImage(
+                "images/icon_back.png",
+              ),
+              size: 30.0,
+            )
+        ),
+        elevation: 0,
+        title: const Text(
+          Constants.labelFiguringInsecurities,
+          style: Styles.subHeadingStyle,
         ),
         backgroundColor: MyColors.backgroundColor,
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _questions[_currentQuestionIndex].question ?? "",
-                style: Styles.questionStyle,
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: SingleChildScrollView(
-                    child: Column(
-                      children: _questions[_currentQuestionIndex].options!.map((option) {
-                        return GestureDetector(
-                          onTap: (){
-                            _onOptionSelected(option: option);
-                          },
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              width: double.maxFinite,
-                              margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                              decoration: BoxDecoration(
-                                color: (isExisting(data: _questions[_currentQuestionIndex])?.optionId == option.optionId)
+        surfaceTintColor: Colors.transparent,
+      ),
+      backgroundColor: MyColors.backgroundColor,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _questions[_currentQuestionIndex].question ?? "",
+              style: Styles.questionStyle,
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: SingleChildScrollView(
+                  child: Column(
+                    children: _questions[_currentQuestionIndex].options!.map((option) {
+                      return GestureDetector(
+                        onTap: (){
+                          _onOptionSelected(option: option);
+                        },
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: double.maxFinite,
+                            margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                            decoration: BoxDecoration(
+                              color: (isExisting(data: _questions[_currentQuestionIndex])?.optionId == option.optionId)
+                                  && (isExisting(data: _questions[_currentQuestionIndex])?.catId == option.catId)
+                                  && (isExisting(data: _questions[_currentQuestionIndex])?.questionId == option.questionId)
+                              ?MyColors.textColorPurple
+                              :MyColors.colorWhite,
+                              border: Border.all(color: Colors.grey.shade500),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                option.option ?? "",
+                                style: Styles.questionStyle.copyWith(color:
+                                (isExisting(data: _questions[_currentQuestionIndex])?.optionId == option.optionId)
                                     && (isExisting(data: _questions[_currentQuestionIndex])?.catId == option.catId)
                                     && (isExisting(data: _questions[_currentQuestionIndex])?.questionId == option.questionId)
-                                ?MyColors.textColorPurple
-                                :MyColors.colorWhite,
-                                border: Border.all(color: Colors.grey.shade500),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  option.option ?? "",
-                                  style: Styles.questionStyle.copyWith(color:
-                                  (isExisting(data: _questions[_currentQuestionIndex])?.optionId == option.optionId)
-                                      && (isExisting(data: _questions[_currentQuestionIndex])?.catId == option.catId)
-                                      && (isExisting(data: _questions[_currentQuestionIndex])?.questionId == option.questionId)
-                                      ? MyColors.colorWhite
-                                      :MyColors.textColorPurple),
-                                ),
+                                    ? MyColors.colorWhite
+                                    :MyColors.textColorPurple),
                               ),
                             ),
                           ),
-                        );
-                      }).toList(),
-                    )
-                ),
+                        ),
+                      );
+                    }).toList(),
+                  )
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: LinearProgressIndicator(
-                  borderRadius: BorderRadius.circular(10),
-                  value: _progress,
-                  backgroundColor: const Color(0XFFD9D9D9),
-                  color: const Color(0XFF8367C7),
-                  minHeight: 13,
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: LinearProgressIndicator(
+                borderRadius: BorderRadius.circular(10),
+                value: _progress,
+                backgroundColor: const Color(0XFFD9D9D9),
+                color: const Color(0XFF8367C7),
+                minHeight: 13,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_currentQuestionIndex > 0) {
+                        _currentQuestionIndex--;
+                      }
+                    });
+                  },
+                  child: const Text(
+                    Constants.labelBack,
+                    style: Styles.buttonTextStyle,
+                  ),
+                ),
+                const Spacer(),
+                Opacity(
+                  opacity: (isExisting(data: _questions[_currentQuestionIndex]) !=null) ?1:0.2,
+                  child: TextButton(
                     onPressed: () {
-                      setState(() {
-                        if (_currentQuestionIndex > 0) {
-                          _currentQuestionIndex--;
+                      if(isExisting(data: _questions[_currentQuestionIndex]) !=null){
+                        if (_currentQuestionIndex < (_questions.length - 1)) {
+                          setState(() {
+                            _currentQuestionIndex++;
+                          });
+                        }else{
+                          Get.offAndToNamed(QuizResultsScreen.tag,arguments: _selectedQuestions);
                         }
-                      });
+                      }
                     },
                     child: const Text(
-                      Constants.labelBack,
+                      Constants.labelNext,
                       style: Styles.buttonTextStyle,
                     ),
                   ),
-                  const Spacer(),
-                  Opacity(
-                    opacity: (isExisting(data: _questions[_currentQuestionIndex]) !=null) ?1:0.2,
-                    child: TextButton(
-                      onPressed: () {
-                        if(isExisting(data: _questions[_currentQuestionIndex]) !=null){
-                          if (_currentQuestionIndex < (_questions.length - 1)) {
-                            setState(() {
-                              _currentQuestionIndex++;
-                            });
-                          }
-                        }
-                      },
-                      child: const Text(
-                        Constants.labelNext,
-                        style: Styles.buttonTextStyle,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -193,7 +199,7 @@ class _QuizScreenState extends State<QuizScreen> {
     return (_currentQuestionIndex + 1) / _questions.length;
   }
 
-  List<Data> getAllQuestions() {
+  List<Data> getAllQuestions({bool skipAcademicPerformance = false,bool careerCompetence = false}) {
     List<Data> allQuestions = [];
     for (var category in Constants.questionsModel.questionsData ?? []) {
       if (category.data != null) {

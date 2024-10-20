@@ -1,14 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:worthy_you/extensions/map_extentions.dart';
 import 'package:worthy_you/screens/chatbot/chat_bot_intro_screen.dart';
 import 'package:worthy_you/screens/quiz/specific/speech_text_screen.dart';
 import 'package:worthy_you/screens/quiz/take_a_quiz.dart';
+import 'package:worthy_you/utils/DimLoadingDialog.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
 
 import '../../utils/pref_utils.dart';
-import '../audio_play_screen.dart';
 import '../profile/ProfileScreen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -20,15 +24,18 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   String name="N/A";
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   var listMeditationPaths = [
     "Appearance",
-    "Acceptance",
+    "Social Acceptance",
     "Academic Performance",
-    "Competence"
+    "Career Competence"
   ];
   @override
   void initState() {
     _loadUserData();
+    getUserRecords();
     super.initState();
   }
   void _loadUserData() async {
@@ -65,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
                         height: 40.0,
                       ),
                       Text(
-                        "Welcome ${name}!",
+                        "Welcome $name!",
                         style: Styles.subHeadingStyle
                             .copyWith(color: MyColors.colorBlack),
                       ),
@@ -108,22 +115,22 @@ class _MainScreenState extends State<MainScreen> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: listMeditationPaths.map((item) {
+                children: listMeditationPaths.map((val) {
                   return Container(
                     margin: const EdgeInsets.only(right: 10.0),
                     child: ActionChip(
                       backgroundColor: MyColors.colorWhite,
                       label: Text(
-                        item,
+                        val,
                         style: Styles.textStyle.copyWith(fontSize: 14),
                       ),
                       shape: const RoundedRectangleBorder(
                           side: BorderSide(
                               color: MyColors.colorBlack, width: 0.5),
                           borderRadius:
-                              BorderRadius.all(Radius.circular(25.0))),
+                          BorderRadius.all(Radius.circular(25.0))),
                       onPressed: () {
-                        var index = listMeditationPaths.indexOf(item);
+                        var index = listMeditationPaths.indexOf(val);
                         switch (index) {
                           case 0:
                             {
@@ -140,7 +147,8 @@ class _MainScreenState extends State<MainScreen> {
                               var args = {
                                 "title": Constants.labelSocialAcceptance,
                                 "heading": Constants.infoSocialAcceptance,
-                                "image": "images/icon_social_acceptance.png"
+                                "image":
+                                "images/icon_social_acceptance.png"
                               };
                               Get.toNamed(SpeechToTextScreen.tag,
                                   arguments: args);
@@ -148,9 +156,12 @@ class _MainScreenState extends State<MainScreen> {
                           case 2:
                             {
                               var args = {
-                                "title": Constants.labelAcademicPerformance,
-                                "heading": Constants.infoAcademicPerformance,
-                                "image": "images/icon_academic_performance.png"
+                                "title":
+                                Constants.labelAcademicPerformance,
+                                "heading":
+                                Constants.infoAcademicPerformance,
+                                "image":
+                                "images/icon_academic_performance.png"
                               };
                               Get.toNamed(SpeechToTextScreen.tag,
                                   arguments: args);
@@ -160,7 +171,8 @@ class _MainScreenState extends State<MainScreen> {
                               var args = {
                                 "title": Constants.labelCareerCompetence,
                                 "heading": Constants.infoCareerCompetence,
-                                "image": "images/icon_career_competence.png"
+                                "image":
+                                "images/icon_career_competence.png"
                               };
                               Get.toNamed(SpeechToTextScreen.tag,
                                   arguments: args);
@@ -170,18 +182,6 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   );
                 }).toList(),
-                // children: [
-                //   Chip(label: Text("Appearance")),
-                //   buildMeditationButton(
-                //       title: 'Appearance',
-                //       onPressed: () {
-                //         Navigator.pushNamed(context, 'AppearanceScreen');
-                //       }),
-                //   buildMeditationButton(
-                //       title: 'Academic Performance', onPressed: () {}),
-                //   buildMeditationButton(title: 'Acceptance', onPressed: () {}),
-                //   buildMeditationButton(title: 'Competence', onPressed: () {}),
-                // ],
               ),
             ),
             const SizedBox(height: 10),
@@ -289,5 +289,23 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> getUserRecords() async {
+    if(FirebaseAuth.instance.currentUser?.uid !=null){
+      try {
+        var userDoc = await _firestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get();
+        if (userDoc.exists) {
+          if(userDoc.data()?.containsKey("voice") ==  true){
+            var voice = userDoc.data()?.getValueOfKey("voice");
+            MyPrefUtils.putString(MyPrefUtils.voiceTemplate, voice);
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error fetching user records: $e');
+        }
+      }
+    }
   }
 }

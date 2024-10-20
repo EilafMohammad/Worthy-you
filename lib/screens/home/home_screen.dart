@@ -8,6 +8,7 @@ import 'package:worthy_you/utils/styles.dart';
 import '../../helpers/meditation_button.dart';
 import '../../helpers/meditation_card.dart';
 import '../my_affirmations_screen.dart';
+import '../quiz/saved_affirmation_screen.dart';
 import '../subscription_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 1; // Default to the Main screen
 
   final List<Widget> _screens = [
-    AffirmationCategoriesScreen(),
+    const SavedAffirmationScreen(),
     const MainScreen(), // Main Screen
     const SubscriptionScreen(),
   ];
@@ -42,61 +43,61 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: MyColors.backgroundColor,
-        body: _screens[_selectedIndex],
-        bottomNavigationBar: _selectedIndex == 1
-            ? Container(
-                decoration: const BoxDecoration(
-                  color: MyColors.backgroundColor,
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: MyColors.colorBlack,
-                      blurRadius: 2.0,
-                      offset: Offset(0.0, 0.75),
+    return Scaffold(
+      appBar: AppBar(toolbarHeight: 0.0,backgroundColor: Colors.transparent,elevation: 0.0,),
+      backgroundColor: MyColors.backgroundColor,
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: _selectedIndex == 1
+          ? Container(
+              decoration: const BoxDecoration(
+                color: MyColors.backgroundColor,
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: MyColors.colorBlack,
+                    blurRadius: 2.0,
+                    offset: Offset(0.0, 0.75),
+                  ),
+                ],
+              ),
+              child: BottomNavigationBar(
+                backgroundColor: MyColors.backgroundColor,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      size: 25,
+                      AssetImage('images/icons/investment 1.png'),
                     ),
-                  ],
-                ),
-                child: BottomNavigationBar(
-                  items: const [
-                    BottomNavigationBarItem(
-                      icon: ImageIcon(
-                        size: 25,
-                        AssetImage('images/icons/investment 1.png'),
-                      ),
-                      label: Constants.labelMyAffirmations,
+                    label: Constants.labelMyAffirmations,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      size: 22,
+                      AssetImage('images/icons/home 1.png'),
                     ),
-                    BottomNavigationBarItem(
-                      icon: ImageIcon(
-                        size: 22,
-                        AssetImage('images/icons/home 1.png'),
-                      ),
-                      label: Constants.labelMain,
+                    label: Constants.labelMain,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      size: 25,
+                      AssetImage('images/icons/Money.png'),
                     ),
-                    BottomNavigationBarItem(
-                      icon: ImageIcon(
-                        size: 25,
-                        AssetImage('images/icons/Money.png'),
-                      ),
-                      label: Constants.labelSubscriptions,
-                    ),
-                  ],
-                  currentIndex: _selectedIndex,
-                  selectedItemColor: Colors.black,
-                  unselectedLabelStyle: Styles.textStyle.copyWith(
-                      fontSize: 12.0,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                  selectedLabelStyle: Styles.textStyle.copyWith(
-                      fontSize: 12.0,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                  onTap: _onItemTapped,
-                ),
-              )
-            : null, // Hide bottom bar on other screens
-      ),
+                    label: Constants.labelSubscriptions,
+                  ),
+                ],
+                currentIndex: _selectedIndex,
+                selectedItemColor: Colors.black,
+                unselectedLabelStyle: Styles.textStyle.copyWith(
+                    fontSize: 12.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+                selectedLabelStyle: Styles.textStyle.copyWith(
+                    fontSize: 12.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+                onTap: _onItemTapped,
+              ),
+            )
+          : null, // Hide bottom bar on other screens
     );
   }
 

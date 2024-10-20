@@ -26,19 +26,6 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: SplashScreen.tag,
       getPages: AppRoutes.rideRoutes(),
-      // routes: {
-      //   SplashScreen.tag: (context) => const SplashScreen(), // Register the splash screen route
-      //   OnboardingScreen.tag: (context) => const OnboardingScreen(), // Correctly reference OnboardingScreen
-      //   'FirstRegistration': (context) => const FirstRegistration(), // Register the FirstRegistration screen
-      //   'HomeScreen': (context) => const HomeScreen(),
-      //   'AudioPlayScreen': (context) => const AudioPlayScreen(),
-      //   'AppearanceScreen': (context) => const AppearanceScreen(),
-      //   'VentingBotScreen1': (context) => const VentingBotScreen1(),
-      //   'Bot2ChatScreen': (context) => const Bot2ChatScreen(),
-      //   'QuizScreen': (context) => const QuizScreen(),
-      //   'QuizPathScreen': (context) => const QuizPathScreen(),
-      //   'AudioplayAppearenceScreen': (context) => AudioplayAppearenceScreen(responseText: 'Sample response'), // Fix: remove const and pass dynamic value
-      // },
     );
   }
 }

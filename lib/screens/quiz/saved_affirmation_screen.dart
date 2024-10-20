@@ -12,18 +12,17 @@ import 'package:worthy_you/utils/styles.dart';
 
 import '../../utils/DimLoadingDialog.dart';
 
-class AffirmationCategoriesScreen extends StatefulWidget {
-  static const tag = '/affirmation_categories_screen';
-
-  AffirmationCategoriesScreen({super.key});
+class SavedAffirmationScreen extends StatefulWidget {
+  static const tag = '/saved_affirmation_screen';
+  const SavedAffirmationScreen({super.key});
 
   @override
-  State<AffirmationCategoriesScreen> createState() =>
-      _AffirmationCategoriesScreenState();
+  State<SavedAffirmationScreen> createState() =>
+      _SavedAffirmationScreenState();
 }
 
-class _AffirmationCategoriesScreenState
-    extends State<AffirmationCategoriesScreen> {
+class _SavedAffirmationScreenState
+    extends State<SavedAffirmationScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String responseText = "N/A";
@@ -123,45 +122,129 @@ class _AffirmationCategoriesScreenState
                 itemBuilder: (context, index) {
                   return InkWell(
                       onTap: () {
-                        switch (imagePaths[index]['id']) {
-                          case "Appearance":
+                        if (recordsList.where((item)=> (item["id"] == imagePaths[index]['id'])).isNotEmpty) {
+                          var quizValue = recordsList.firstWhere((item) => item["id"] == imagePaths[index]['id']);
+                          Get.toNamed(AudioPlayerAppearanceScreen.tag,
+                              arguments: {
+                                "text": quizValue["text"],
+                                "category": quizValue["id"],
+                                "data": jsonDecode(quizValue["response_data"])
+                              });
+                        }
+
+
+
+                        /*// Get.toNamed(AudioPlayerAppearanceScreen.tag);
+                        switch (index) {
+                          case 0:
                             {
                               var args = {
                                 "title": Constants.labelAppearance,
                                 "heading": Constants.infoAppearance,
                                 "image": "images/icon_appearance.png"
                               };
-                              Get.offAndToNamed(SpeechToTextScreen.tag, arguments: args);
+                              // Get.toNamed(SpeechToTextScreen.tag,
+                              //     arguments: args);
+
+                              responseText = "";
+                              getUserVoice(Constants.labelAppearance, context)
+                                  .then((val) {
+                                if (responseText.isNotEmpty) {
+                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
+                                      arguments: {
+                                        "text": responseText,
+                                        "category": Constants.labelAppearance,
+                                        "data": jsonDecode(val ?? "")
+                                      });
+                                } else {
+                                  Get.toNamed(SpeechToTextScreen.tag,
+                                      arguments: args);
+                                }
+                              });
                             }
-                          case "Social Acceptance":
+                          case 1:
                             {
                               var args = {
                                 "title": Constants.labelSocialAcceptance,
                                 "heading": Constants.infoSocialAcceptance,
                                 "image": "images/icon_social_acceptance.png"
                               };
-                              Get.toNamed(SpeechToTextScreen.tag, arguments: args);
+                              // Get.toNamed(SpeechToTextScreen.tag,
+                              //     arguments: args);
+
+                              responseText = "";
+                              getUserVoice(
+                                      Constants.labelSocialAcceptance, context)
+                                  .then((val) {
+                                if (responseText.isNotEmpty) {
+                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
+                                      arguments: {
+                                        "text": responseText,
+                                        "category":
+                                            Constants.labelSocialAcceptance,
+                                        "data": jsonDecode(val ?? "")
+                                      });
+                                } else {
+                                  Get.toNamed(SpeechToTextScreen.tag,
+                                      arguments: args);
+                                }
+                              });
                             }
-                          case "Academic Performance":
+                          case 2:
                             {
                               var args = {
                                 "title": Constants.labelAcademicPerformance,
                                 "heading": Constants.infoAcademicPerformance,
                                 "image": "images/icon_academic_performance.png"
                               };
-                              Get.toNamed(SpeechToTextScreen.tag,
-                                  arguments: args);
+                              // Get.toNamed(SpeechToTextScreen.tag,
+                              //     arguments: args);
+
+                              responseText = "";
+                              getUserVoice(Constants.labelAcademicPerformance,
+                                      context)
+                                  .then((val) {
+                                if (responseText.isNotEmpty) {
+                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
+                                      arguments: {
+                                        "text": responseText,
+                                        "category":
+                                            Constants.labelAcademicPerformance,
+                                        "data": jsonDecode(val ?? "")
+                                      });
+                                } else {
+                                  Get.toNamed(SpeechToTextScreen.tag,
+                                      arguments: args);
+                                }
+                              });
                             }
-                          case "Career Competence":
+                          case 3:
                             {
                               var args = {
                                 "title": Constants.labelCareerCompetence,
                                 "heading": Constants.infoCareerCompetence,
                                 "image": "images/icon_career_competence.png"
                               };
-                              Get.toNamed(SpeechToTextScreen.tag, arguments: args);
+                              // Get.toNamed(SpeechToTextScreen.tag,
+                              //     arguments: args);
+
+                              responseText = "";
+                              getUserVoice(Constants.labelCareerCompetence, context)
+                                  .then((val) {
+                                if (responseText.isNotEmpty) {
+                                  Get.toNamed(AudioPlayerAppearanceScreen.tag,
+                                      arguments: {
+                                        "text": responseText,
+                                        "category": Constants.labelCareerCompetence,
+                                        "data": jsonDecode(val ?? "")
+                                      });
+                                } else {
+                                  Get.toNamed(SpeechToTextScreen.tag,
+                                      arguments: args);
+                                }
+                              });
                             }
-                        }
+                        }*/
                       },
                       child: (showIndex(recordsList,index))
                           ? Container(
@@ -200,10 +283,11 @@ class _AffirmationCategoriesScreenState
     if (recordsList.isEmpty) return false;
     if (recordsList.where((item)=> (item["id"] == imagePaths[index]['id'])).isNotEmpty) {
       var quizValue = recordsList.firstWhere((item) => item["id"] == imagePaths[index]['id']);
-      return quizValue["quiz_value"];
+      return quizValue["response_data"]!=null;
     }
     return false;
   }
+
   Future<String?> getUserVoice(
       String competenceId, BuildContext context) async {
     var dialog = DimLoadingDialog(context,
