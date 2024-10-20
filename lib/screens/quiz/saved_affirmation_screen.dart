@@ -247,28 +247,29 @@ class _SavedAffirmationScreenState
                         }*/
                       },
                       child: (showIndex(recordsList,index))
-                          ? Container(
-                              height: 150,
-                              width: double.infinity,
-                              margin: const EdgeInsets.all(5),
-                              padding: const EdgeInsets.all(6.0),
-                              decoration: BoxDecoration(
-                                // color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                image: DecorationImage(
-                                  image: AssetImage(imagePaths[index]["img"]),
-                                  // Use the image path from the list
-                                  fit: BoxFit.cover,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 2,
-                                    blurRadius: 2,
-                                  ),
-                                ],
-                              ),
-                            )
+                      ? Image.asset(imagePaths[index]["img"])
+                          // ? Container(
+                          //     height: 200,
+                          //     width: double.infinity,
+                          //     margin: const EdgeInsets.all(5),
+                          //     padding: const EdgeInsets.all(6.0),
+                          //     decoration: BoxDecoration(
+                          //       // color: Colors.white,
+                          //       borderRadius: BorderRadius.circular(15),
+                          //       image: DecorationImage(
+                          //         image: AssetImage(imagePaths[index]["img"]),
+                          //         // Use the image path from the list
+                          //         fit: BoxFit.cover,
+                          //       ),
+                          //       boxShadow: [
+                          //         BoxShadow(
+                          //           color: Colors.grey.withOpacity(0.2),
+                          //           spreadRadius: 2,
+                          //           blurRadius: 2,
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   )
                           : Container());
                 },
               ),
