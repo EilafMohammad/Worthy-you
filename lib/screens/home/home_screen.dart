@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:worthy_you/screens/home/main_screen.dart';
 import 'package:worthy_you/screens/quiz/affirmation_categories_screen.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
+import 'package:worthy_you/utils/widget_functions.dart';
 
 import '../../helpers/meditation_button.dart';
 import '../../helpers/meditation_card.dart';
@@ -34,6 +36,14 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _selectedIndex = index;
       });
+    }else if (index == 2) {
+      WidgetFunction.showAlertDialog(
+          titleText: Constants.labelComingSoon,
+          infoText: Constants.labelComingSoonInfo,
+          buttonText: Constants.labelDone,
+          onPressed: () {
+            Get.back();
+          });
     } else {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => _screens[index]),

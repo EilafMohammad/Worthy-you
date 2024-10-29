@@ -80,6 +80,8 @@ class Constants{
   static const String infoSocialAcceptance="Do you often feel insecure about how others perceive you, and why do you think that is? How does it affect your self-confidence?";
   static const String infoAcademicPerformance="Do you often feel anxious or uncertain about your academic performance? What do you think might be causing these feelings, and how does it impact your overall self-esteem?";
   static const String infoCareerCompetence="Do you ever question your ability to succeed in your career? What experiences or thoughts contribute to this doubt, and how does it affect your confidence in your professional skills?";
+  static const String labelComingSoon="Coming Soon!";
+  static const String labelComingSoonInfo="Feature is under development will be available soon";
 
   static const questions = {
     "questionsData":[
@@ -877,4 +879,6 @@ class Constants{
 
   static const String labelClear ="Clear";
   static const String labelSubmit ="Submit";
+
+  static const String labelDone ="Done";
 }

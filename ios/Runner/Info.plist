@@ -3,10 +3,9 @@
 <plist version="1.0">
 <dict>
      <key>NSSpeechRecognitionUsageDescription</key>
-     <string>This example need Text to Speech recognition</string>
+     <string>Our app uses speech recognition to transcribe your voice commands into text, making it easier to navigate and control the app without manual input.</string>
      <key>UIBackgroundModes</key>
      <array>
-         <string>audio</string>
          <string>processing</string>
      </array>
      <key>BGTaskSchedulerPermittedIdentifiers</key>
@@ -14,7 +13,7 @@
          <string>com.bmt.worthyYou</string>
      </array>
      <key>NSMicrophoneUsageDescription</key>
-     <string>We need access to your microphone for recording purposes.</string>
+     <string>Our app uses the microphone to capture your voice for voice commands, allowing hands-free control of app features, such as starting a recording.</string>
      <key>NSAppTransportSecurity</key>
        <dict>
                <key>NSAllowsArbitraryLoads</key>

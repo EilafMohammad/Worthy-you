@@ -11,6 +11,7 @@ import 'package:worthy_you/utils/DimLoadingDialog.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/styles.dart';
+import 'package:worthy_you/utils/widget_functions.dart';
 
 import '../../utils/pref_utils.dart';
 import '../profile/ProfileScreen.dart';
@@ -228,61 +229,83 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.asset(
-                              "images/book_a_session.png",
-                              fit: BoxFit.cover,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 10.0),
-                              decoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                    Colors.transparent,
-                                    Colors.transparent,
-                                    MyColors.titleBlueColor
-                                  ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter)),
-                              alignment: Alignment.bottomCenter,
-                              child: Text(
-                                Constants.labelBookSession,
-                                style: Styles.textStyleBold
-                                    .copyWith(color: MyColors.colorWhite),
+                    child: GestureDetector(
+                      onTap: (){
+                        WidgetFunction.showAlertDialog(
+                            titleText: Constants.labelComingSoon,
+                            infoText: Constants.labelComingSoonInfo,
+                            buttonText: Constants.labelDone,
+                            onPressed: () {
+                              Get.back();
+                            });
+                      },
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.asset(
+                                "images/book_a_session.png",
+                                fit: BoxFit.cover,
                               ),
-                            )
-                          ],
-                        )),
+                              Container(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                        colors: [
+                                      Colors.transparent,
+                                      Colors.transparent,
+                                      MyColors.titleBlueColor
+                                    ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter)),
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  Constants.labelBookSession,
+                                  style: Styles.textStyleBold
+                                      .copyWith(color: MyColors.colorWhite),
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            Container(
-              width: double.maxFinite,
-              height: 180,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                image: const DecorationImage(fit: BoxFit.cover, image: AssetImage('images/icon_creative_visualization.png')),
-                borderRadius: BorderRadius.circular(28),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Creative Visualization',
-                    style: Styles.headingStyle.copyWith(color: MyColors.colorWhite),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'You, your future,\nare a result of your\nbelieves. Reset your\nmindset to live a \nbreakthrough.',
-                    style: Styles.textStyle.copyWith(fontSize: 14,color: MyColors.colorWhite),
-                  ),
-                ],
+            GestureDetector(
+              onTap: (){
+                WidgetFunction.showAlertDialog(
+                    titleText: Constants.labelComingSoon,
+                    infoText: Constants.labelComingSoonInfo,
+                    buttonText: Constants.labelDone,
+                    onPressed: () {
+                      Get.back();
+                    });
+              },
+              child: Container(
+                width: double.maxFinite,
+                height: 180,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  image: const DecorationImage(fit: BoxFit.cover, image: AssetImage('images/icon_creative_visualization.png')),
+                  borderRadius: BorderRadius.circular(28),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Creative Visualization',
+                      style: Styles.headingStyle.copyWith(color: MyColors.colorWhite),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'You, your future,\nare a result of your\nbelieves. Reset your\nmindset to live a \nbreakthrough.',
+                      style: Styles.textStyle.copyWith(fontSize: 14,color: MyColors.colorWhite),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

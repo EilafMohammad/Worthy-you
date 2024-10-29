@@ -277,24 +277,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(
               height: 20,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                      height: 25,
-                      child: Image.asset("images/profile_icon.png")),
-                  Text(
-                    Constants.labelAccountSecurity,
-                    textAlign: TextAlign.start,
-                    style: Styles.textStyleBold.copyWith(color: Colors.grey),
-                  ),
-                  Container(
-                      height: 20,
-                      child: Image.asset("images/arrow_towards_right.png")),
-                ],
+            GestureDetector(
+              onTap: (){
+                WidgetFunction.showAlertDialog(
+                    titleText: Constants.labelComingSoon,
+                    infoText: Constants.labelComingSoonInfo,
+                    buttonText: Constants.labelDone,
+                    onPressed: () {
+                      Get.back();
+                    });
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                        height: 25,
+                        child: Image.asset("images/profile_icon.png")),
+                    Text(
+                      Constants.labelAccountSecurity,
+                      textAlign: TextAlign.start,
+                      style: Styles.textStyleBold.copyWith(color: Colors.grey),
+                    ),
+                    Container(
+                        height: 20,
+                        child: Image.asset("images/arrow_towards_right.png")),
+                  ],
+                ),
               ),
             ),
             const SizedBox(
@@ -355,24 +366,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(
               height: 20,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                      height: 25,
-                      child: Image.asset("images/language_icon.png")),
-                  Text(
-                    Constants.labelLanguage,
-                    textAlign: TextAlign.start,
-                    style: Styles.textStyleBold.copyWith(color: Colors.grey),
-                  ),
-                  Container(
-                      height: 20,
-                      child: Image.asset("images/arrow_towards_right.png")),
-                ],
+            GestureDetector(
+              onTap: (){
+                WidgetFunction.showAlertDialog(
+                    titleText: Constants.labelComingSoon,
+                    infoText: Constants.labelComingSoonInfo,
+                    buttonText: Constants.labelDone,
+                    onPressed: () {
+                      Get.back();
+                    });
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                        height: 25,
+                        child: Image.asset("images/language_icon.png")),
+                    Text(
+                      Constants.labelLanguage,
+                      textAlign: TextAlign.start,
+                      style: Styles.textStyleBold.copyWith(color: Colors.grey),
+                    ),
+                    Container(
+                        height: 20,
+                        child: Image.asset("images/arrow_towards_right.png")),
+                  ],
+                ),
               ),
             ),
             const SizedBox(
