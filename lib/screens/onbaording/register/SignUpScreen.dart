@@ -352,6 +352,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .get();
 
       if (emailQuery.docs.isNotEmpty) {
+        dialog.dismiss();
         setState(() {
           _errorMessage ("Email already in use.");
         });
@@ -365,6 +366,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .get();
 
       if (usernameQuery.docs.isNotEmpty) {
+        dialog.dismiss();
         setState(() {
           _errorMessage ("Username already taken.");
         });
@@ -384,13 +386,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       });
 
-      _showSuccess("Registration successful!");
       await MyPrefUtils.putString(MyPrefUtils.userEmail,_emailController.text);
       await MyPrefUtils.putString(MyPrefUtils.userName,_nameController.text);
       await MyPrefUtils.putString(MyPrefUtils.userId,userCredential.user!.uid);
       await MyPrefUtils.putBool(MyPrefUtils.isLoggedIn,true);
       dialog.dismiss();
-
+      _showSuccess("Registration successful!");
       Get.offAllNamed(OnboardingScreen.tag);
     } catch (e) {
       dialog.dismiss();
