@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:worthy_you/screens/home/home_screen.dart';
 import 'package:worthy_you/screens/onbaording/onboarding_screen.dart';
 import 'package:worthy_you/screens/onbaording/register/SignUpScreen.dart';
@@ -34,64 +35,6 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  _signInWithGoogle() async {
-    var dialog = DimLoadingDialog(context,
-        blur: 3,
-        dismissable: false,
-        backgroundColor: const Color(0x30000000),
-        animationDuration: const Duration(milliseconds: 100));
-    try {
-      dialog.show();
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        return null;
-      }
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-
-      QuerySnapshot emailQuery = await _firestore
-          .collection('users')
-          .where('email', isEqualTo: googleUser.email)
-          .get();
-
-      if (emailQuery.docs.isNotEmpty) {
-        setState(() {
-          _errorMessage("Email already in use.");
-        });
-      } else {
-        await _firestore.collection('users').doc(userCredential.user!.uid).set({
-          'username': googleUser.displayName,
-          'email': googleUser.email,
-        });
-      }
-      _showSuccess("Sign-in successful!");
-
-      await MyPrefUtils.putString(
-          MyPrefUtils.userEmail, userCredential.user?.email ?? "");
-      await MyPrefUtils.putString(
-          MyPrefUtils.userName, userCredential.user?.displayName ?? "");
-      await MyPrefUtils.putString(MyPrefUtils.userId, userCredential.user!.uid);
-      await MyPrefUtils.putBool(MyPrefUtils.isLoggedIn, true);
-      await MyPrefUtils.putBool(MyPrefUtils.isGoogleLoggedIn, true);
-      dialog.dismiss();
-      if (await MyPrefUtils.getBool(MyPrefUtils.isSliderSeen)) {
-        Get.offAllNamed(HomeScreen.tag);
-      } else {
-        Get.offAllNamed(OnboardingScreen.tag);
-      }
-    } catch (e) {
-      dialog.dismiss();
-
-    }
-  }
 
   @override
   void dispose() {
@@ -133,7 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               const Text(
@@ -141,7 +84,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 textAlign: TextAlign.start,
                 style: Styles.boldHeading,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               const Text(
@@ -149,7 +92,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 textAlign: TextAlign.center,
                 style: Styles.normalText,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               const Text(
@@ -157,7 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 textAlign: TextAlign.center,
                 style: Styles.inputTitleStyle,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               TextFormField(
@@ -211,7 +154,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               const Text(
@@ -219,7 +162,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 textAlign: TextAlign.center,
                 style: Styles.inputTitleStyle,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               TextFormField(
@@ -273,7 +216,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               GestureDetector(
@@ -288,7 +231,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               PrimaryButton(
@@ -307,7 +250,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   // Get.toNamed(HomeScreen.tag);
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Row(
@@ -336,7 +279,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
@@ -374,37 +317,42 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Container(
                 height: 45,
                 decoration: BoxDecoration(
+                  color: Colors.black,
                   border: Border.all(
                     color: MyColors.greyLight, // Border color
                     width: 1, // Border width
                   ),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                        height: 20,
-                        child: Image.asset(
-                          "images/facebook.png",
-                        )),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      Constants.lblContinueWithFacebook,
-                      textAlign: TextAlign.center,
-                      style:
-                          Styles.normalText.copyWith(color: MyColors.colorBlack),
-                    ),
-                  ],
+                child: GestureDetector(
+                  onTap: (){
+                    signInWithApple();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          height: 20,
+                          child: Image.asset(
+                            "images/icon_apple.png",
+                          )),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        Constants.lblContinueWithApple,
+                        textAlign: TextAlign.center,
+                        style: Styles.normalText.copyWith(color: MyColors.colorWhite),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: height*0.1,),
@@ -430,7 +378,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ],
                 )),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               )
             ],
@@ -510,5 +458,120 @@ class _SignInScreenState extends State<SignInScreen> {
     await _googleSignIn.signOut();
     await _auth.signOut();
     print('User signed out');
+  }
+
+  _signInWithGoogle() async {
+    var dialog = DimLoadingDialog(context,
+        blur: 3,
+        dismissable: false,
+        backgroundColor: const Color(0x30000000),
+        animationDuration: const Duration(milliseconds: 100));
+    try {
+      dialog.show();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential =
+      await _auth.signInWithCredential(credential);
+
+      QuerySnapshot emailQuery = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: googleUser.email)
+          .get();
+
+      if (emailQuery.docs.isNotEmpty) {
+        setState(() {
+          _errorMessage("Email already in use.");
+        });
+      } else {
+        await _firestore.collection('users').doc(userCredential.user!.uid).set({
+          'username': googleUser.displayName,
+          'email': googleUser.email,
+        });
+      }
+      _showSuccess("Sign-in successful!");
+
+      await MyPrefUtils.putString(
+          MyPrefUtils.userEmail, userCredential.user?.email ?? "");
+      await MyPrefUtils.putString(
+          MyPrefUtils.userName, userCredential.user?.displayName ?? "");
+      await MyPrefUtils.putString(MyPrefUtils.userId, userCredential.user!.uid);
+      await MyPrefUtils.putBool(MyPrefUtils.isLoggedIn, true);
+      await MyPrefUtils.putBool(MyPrefUtils.isGoogleLoggedIn, true);
+      dialog.dismiss();
+      if (await MyPrefUtils.getBool(MyPrefUtils.isSliderSeen)) {
+        Get.offAllNamed(HomeScreen.tag);
+      } else {
+        Get.offAllNamed(OnboardingScreen.tag);
+      }
+    } catch (e) {
+      dialog.dismiss();
+
+    }
+  }
+
+  Future<void> signInWithApple() async {
+    var dialog = DimLoadingDialog(context,
+        blur: 3,
+        dismissable: false,
+        backgroundColor: const Color(0x30000000),
+        animationDuration: const Duration(milliseconds: 100));
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      // Create an OAuth provider for Apple.
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      // Sign in with Firebase using the Apple credentials
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+      final user = userCredential.user;
+      var emailQuery = await _firestore.collection('users').where('email', isEqualTo: user?.email).get();
+
+      if (emailQuery.docs.isNotEmpty) {
+        _errorMessage("Email already in use.");
+      } else {
+        await _firestore.collection('users').doc(userCredential.user!.uid).set({'username': user?.displayName, 'email': user?.email,});
+      }
+      _showSuccess("Sign-in successful!");
+
+      await MyPrefUtils.putString(
+          MyPrefUtils.userEmail, userCredential.user?.email ?? "");
+      await MyPrefUtils.putString(
+          MyPrefUtils.userName, userCredential.user?.displayName ?? "");
+      await MyPrefUtils.putString(MyPrefUtils.userId, userCredential.user!.uid);
+      await MyPrefUtils.putBool(MyPrefUtils.isLoggedIn, true);
+      await MyPrefUtils.putBool(MyPrefUtils.isGoogleLoggedIn, true);
+      if (await MyPrefUtils.getBool(MyPrefUtils.isSliderSeen)) {
+        Get.offAllNamed(HomeScreen.tag);
+      } else {
+        Get.offAllNamed(OnboardingScreen.tag);
+      }
+
+
+
+      print('Signed in with Apple: ${user?.uid}');
+    } catch (e) {
+      print("Error signing in with Apple: $e");
+    }finally{
+      dialog.dismiss();
+    }
   }
 }

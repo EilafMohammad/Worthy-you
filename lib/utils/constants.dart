@@ -28,6 +28,7 @@ class Constants{
   static const String lblEmail="Email";
   static const String lblContinueWithGoogle="Continue with Google";
   static const String lblContinueWithFacebook="Continue with Facebook";
+  static const String lblContinueWithApple="Continue with Apple";
   static const String lblSetPassword="Set Password";
   static const String lblAlreadyHaveAccount="Already have an account?";
   static const String lblSignIn="SignIn";
@@ -40,6 +41,7 @@ class Constants{
   static const String labelAccountSecurity="Account Security";
   static const String labelLogout="Logout";
   static const String labelLanguage ="Language ";
+  static const String labelDeleteAccount ="Delete Account ";
   static const String labelDeleteVoiceClone ="Delete voice clone ";
   static const String labelDelete ="Delete";
   static const String labelVoiceClone ="Voice clone";

@@ -1,5 +1,6 @@
 // File: screens/onboarding_screen.dart
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:audio_session/audio_session.dart';
@@ -7,23 +8,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:worthy_you/screens/Splash_screen.dart';
 import 'package:worthy_you/utils/colors.dart';
 import 'package:worthy_you/utils/constants.dart';
 import 'package:worthy_you/utils/pref_utils.dart';
 import 'package:worthy_you/utils/styles.dart';
-import 'package:http/http.dart' as http;
+import 'package:worthy_you/utils/widget_functions.dart';
 
 import '../../utils/DimLoadingDialog.dart';
 import '../onbaording/fourth_onboard.dart';
 import '../widget/btn_primary.dart';
-
-import 'package:flutter_sound/flutter_sound.dart';
-import 'dart:async';
 
 typedef _Fn = void Function();
 
@@ -229,7 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       height = width;
     }
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MyColors.backgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -265,7 +264,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Center(
@@ -275,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: Styles.boldHeading.copyWith(color: MyColors.darkBlue),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -298,7 +297,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 7,
             ),
             Padding(
@@ -308,7 +307,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.grey,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -343,7 +342,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 7,
             ),
             Padding(
@@ -353,7 +352,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.grey,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -376,7 +375,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
+              height: 7,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Container(
+                height: 1,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            GestureDetector(
+              onTap: () {
+                WidgetFunction.showAlertDialog(
+                    titleText: "Attention!",
+                    infoText:
+                        "Delete account will remove all user related data from the system",
+                    extraDetails: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: PrimaryButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                textColor: MyColors.colorBlack,
+                                borderColor: MyColors.colorPrimary,
+                                backgroundColor: MyColors.backgroundColor,
+                                title: "Cancel",
+                                titleStyle: Styles.buttonTextStyle
+                                    .copyWith(color: MyColors.colorBlack),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            Expanded(
+                              child: PrimaryButton(
+                                onPressed: () {
+                                  MyPrefUtils.clearCaches().then((value) {
+                                    WidgetFunction.showAlertDialog(
+                                        titleText: "Attention!",
+                                        infoText:
+                                            "Account deletion is in progress, Account will be fully deleted in 24 hours.",
+                                        onPressed: () async {
+                                          if (await MyPrefUtils.getBool(MyPrefUtils.isGoogleLoggedIn)) {
+                                            FirebaseAuth.instance.currentUser?.delete();
+                                            await MyPrefUtils.clearCaches();
+                                            Get.offAllNamed(SplashScreen.tag);
+                                          } else {
+                                            await MyPrefUtils.clearCaches();
+                                            Get.offAllNamed(SplashScreen.tag);
+                                          }
+                                        });
+                                  });
+                                },
+                                textColor: MyColors.colorWhite,
+                                borderColor: Colors.transparent,
+                                backgroundColor: MyColors.colorPrimary,
+                                title: "Delete Account",
+                                titleStyle: Styles.buttonTextStyle
+                                    .copyWith(color: MyColors.colorWhite),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ));
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  color: MyColors.backgroundColor,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                          height: 25,
+                          child: Image.asset(
+                            "images/icon_delete.png",
+                            color: Colors.black,
+                          )),
+                      Text(
+                        Constants.labelDeleteAccount,
+                        textAlign: TextAlign.start,
+                        style:
+                            Styles.textStyleBold.copyWith(color: Colors.grey),
+                      ),
+                      SizedBox(
+                          height: 20,
+                          child: Image.asset("images/arrow_towards_right.png")),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
               height: 7,
             ),
             Padding(

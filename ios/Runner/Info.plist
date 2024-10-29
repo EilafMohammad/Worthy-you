@@ -73,8 +73,11 @@
     		<key>CFBundleURLSchemes</key>
     		<array>
     			<string>com.googleusercontent.apps.247634569115-u3tcv9mm4sdftb17ri291a3i0irg479o</string>
+    			<string>com.bmt.worthyYou.service</string>
     		</array>
     	</dict>
     </array>
+    <key>NSAppleIDUsageDescription</key>
+    <string>Your app needs access to sign in with Apple.</string>
 </dict>
 </plist>

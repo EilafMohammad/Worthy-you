@@ -96,12 +96,12 @@ class _FourthOnboardState extends State<FourthOnboard> {
   }
 
   Future<void> openTheRecorder() async {
-    if (!kIsWeb) {
-      var status = await Permission.microphone.request();
-      if (status != PermissionStatus.granted) {
-        throw RecordingPermissionException('Microphone permission not granted');
-      }
-    }
+    // if (!kIsWeb) {
+      // var status = await Permission.microphone.request();
+      // if (status != PermissionStatus.granted) {
+      //   throw RecordingPermissionException('Microphone permission not granted');
+      // }
+    // }
     await _mRecorder!.openRecorder();
     if (!await _mRecorder!.isEncoderSupported(_codec) && kIsWeb) {
       _codec = Codec.opusWebM;
@@ -205,11 +205,11 @@ class _FourthOnboardState extends State<FourthOnboard> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
+          const Text(
             Constants.lblSubmitVocieSample,
             style: Styles.titleStyle,
           ),
-          SizedBox(height: height * 0.2),
+          Expanded(child: Container()),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
