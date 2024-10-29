@@ -46,6 +46,7 @@ class _ChatBotIntroScreenState extends State<ChatBotIntroScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
+      appBar: AppBar(toolbarHeight: 0.0,backgroundColor: Colors.transparent,elevation: 0.0),
       body: Column(
         children: [
           Row(
