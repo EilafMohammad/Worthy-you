@@ -241,13 +241,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 cursorColor: Colors.black,
                 cursorRadius: const Radius.circular(1),
                 cursorWidth: 1.5,
+                obscureText: true,
                 style: Styles.inputFieldTextStyle,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
                   // Set background color to white
                   errorStyle: const TextStyle(height: 0),
-                  hintText: "Alpha@123",
                   hintStyle: Styles.inputFieldTextHintStyle,
         
                   border: OutlineInputBorder(
