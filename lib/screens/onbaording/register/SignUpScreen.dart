@@ -30,6 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  bool _isPasswordVisible = true;
 
   @override
   void dispose() {
@@ -228,58 +229,82 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(
                 height: 5,
               ),
-              TextFormField(
-                onTap: () {},
-                textAlign: TextAlign.start,
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-                textAlignVertical: TextAlignVertical.center,
-                cursorHeight: 24,
-                controller: _passwordController,
-                cursorColor: Colors.black,
-                cursorRadius: const Radius.circular(1),
-                cursorWidth: 1.5,
-                obscureText: true,
-                style: Styles.inputFieldTextStyle,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  // Set background color to white
-                  errorStyle: const TextStyle(height: 0),
-                  hintStyle: Styles.inputFieldTextHintStyle,
-        
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey.shade300, // Light grey border
-                      width: 1.5,
+              StatefulBuilder(
+                builder: (context,myState) {
+                  return TextFormField(
+                    onTap: () {},
+                    textAlign: TextAlign.start,
+                    keyboardType: TextInputType.text,
+                    maxLines: 1,
+                    textAlignVertical: TextAlignVertical.center,
+                    cursorHeight: 24,
+                    controller: _passwordController,
+                    cursorColor: Colors.black,
+                    cursorRadius: const Radius.circular(1),
+                    cursorWidth: 1.5,
+                    obscureText: _isPasswordVisible,
+                    style: Styles.inputFieldTextStyle,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      // Set background color to white
+                      errorStyle: const TextStyle(height: 0),
+                      hintStyle: Styles.inputFieldTextHintStyle,
+
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey.shade300, // Light grey border
+                          width: 1.5,
+                        ),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey.shade300,
+                          // Light grey border for enabled state
+                          width: 1.5,
+                        ),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                          width: 1,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.blue, // Active border color
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: (_isPasswordVisible)
+                                ? MyColors.colorBlack
+                                : MyColors.textColorSecondary,
+                          ),
+                          onPressed: () {
+                            myState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                          padding: EdgeInsets.zero,
+                        ),
+                      ),
+
                     ),
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey.shade300,
-                      // Light grey border for enabled state
-                      width: 1.5,
-                    ),
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.blue, // Active border color
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
+                  );
+                }
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               PrimaryButton(
