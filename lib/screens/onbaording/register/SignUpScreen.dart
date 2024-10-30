@@ -239,6 +239,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 cursorColor: Colors.black,
                 cursorRadius: const Radius.circular(1),
                 cursorWidth: 1.5,
+                obscureText: true,
                 style: Styles.inputFieldTextStyle,
                 decoration: InputDecoration(
                   filled: true,
