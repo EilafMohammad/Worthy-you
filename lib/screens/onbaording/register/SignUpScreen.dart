@@ -123,7 +123,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fillColor: Colors.white,
                   // Set background color to white
                   errorStyle: const TextStyle(height: 0),
-                  hintText: "John Doe",
                   hintStyle: Styles.inputFieldTextHintStyle,
         
                   border: OutlineInputBorder(
@@ -185,7 +184,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fillColor: Colors.white,
                   // Set background color to white
                   errorStyle: const TextStyle(height: 0),
-                  hintText: "email@gmail.com",
                   hintStyle: Styles.inputFieldTextHintStyle,
         
                   border: OutlineInputBorder(
@@ -247,7 +245,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fillColor: Colors.white,
                   // Set background color to white
                   errorStyle: const TextStyle(height: 0),
-                  hintText: "Alpha@123",
                   hintStyle: Styles.inputFieldTextHintStyle,
         
                   border: OutlineInputBorder(

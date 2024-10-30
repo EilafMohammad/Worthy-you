@@ -2,29 +2,29 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-     <key>NSSpeechRecognitionUsageDescription</key>
-     <string>Our app uses speech recognition to transcribe your voice commands into text, making it easier to navigate and control the app without manual input.</string>
-     <key>UIBackgroundModes</key>
-     <array>
-         <string>processing</string>
-     </array>
-     <key>BGTaskSchedulerPermittedIdentifiers</key>
-     <array>
-         <string>com.bmt.worthyYou</string>
-     </array>
-     <key>NSMicrophoneUsageDescription</key>
-     <string>Our app uses the microphone to capture your voice for voice commands, allowing hands-free control of app features, such as starting a recording.</string>
-     <key>NSAppTransportSecurity</key>
-       <dict>
-               <key>NSAllowsArbitraryLoads</key>
-               <true/>
-       </dict>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Our app uses speech recognition to transcribe your voice commands into text, making it easier to navigate and control the app without manual input.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>processing</string>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.bmt.worthyYou</string>
+	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Our app uses the microphone to capture your voice for voice commands, allowing hands-free control of app features, such as starting a recording.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Worthy You</string>
+	<string>WorthyYou</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -63,20 +63,20 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>GIDClientID</key>
-    <string>247634569115-u3tcv9mm4sdftb17ri291a3i0irg479o.apps.googleusercontent.com</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-    	<dict>
-    		<key>CFBundleTypeRole</key>
-    		<string>Editor</string>
-    		<key>CFBundleURLSchemes</key>
-    		<array>
-    			<string>com.googleusercontent.apps.247634569115-u3tcv9mm4sdftb17ri291a3i0irg479o</string>
-    			<string>com.bmt.worthyYou.service</string>
-    		</array>
-    	</dict>
-    </array>
-    <key>NSAppleIDUsageDescription</key>
-    <string>Your app needs access to sign in with Apple.</string>
+	<string>247634569115-u3tcv9mm4sdftb17ri291a3i0irg479o.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.247634569115-u3tcv9mm4sdftb17ri291a3i0irg479o</string>
+				<string>com.bmt.worthyYou.service</string>
+			</array>
+		</dict>
+	</array>
+	<key>NSAppleIDUsageDescription</key>
+	<string>Your app needs access to sign in with Apple.</string>
 </dict>
 </plist>
